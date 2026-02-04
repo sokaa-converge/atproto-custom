@@ -58,7 +58,7 @@ COPY services/custom-dev-env ./services/custom-dev-env
 
 # Install and build
 RUN pnpm install --frozen-lockfile
-RUN pnpm run --filter '@atproto/dev-env...' build
+RUN pnpm build
 RUN cd packages/dev-env && pnpm run build-custom
 
 # Runtime stage - minimal image
