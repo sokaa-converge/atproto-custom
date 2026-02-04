@@ -63,3 +63,16 @@ nvm-setup: ## Use NVM to install and activate node+pnpm
 	nvm install 18
 	nvm use 18
 	corepack enable
+
+# Docker - lightweight PDS+PLC (no dev container, lower RAM)
+.PHONY: docker-custom-dev-env
+docker-custom-dev-env: ## Run PDS + PLC in Docker (build and start)
+	docker compose -f services/custom-dev-env/docker-compose.yml up --build
+
+.PHONY: docker-custom-dev-env-build
+docker-custom-dev-env-build: ## Build PDS + PLC Docker image (no run)
+	docker compose -f services/custom-dev-env/docker-compose.yml build
+
+.PHONY: docker-custom-dev-env-down
+docker-custom-dev-env-down: ## Stop PDS + PLC Docker containers
+	docker compose -f services/custom-dev-env/docker-compose.yml down

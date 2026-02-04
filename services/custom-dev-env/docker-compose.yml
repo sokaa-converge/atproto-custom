@@ -1,0 +1,23 @@
+# PDS + PLC dev environment
+# Lightweight alternative to dev container - runs only PDS and PLC servers.
+# No Postgres or Redis required (uses SQLite + in-memory stores).
+#
+# Usage from repo root:
+#   docker compose -f services/custom-dev-env/docker-compose.yml up --build
+#   docker compose -f services/custom-dev-env/docker-compose.yml up -d
+#
+# PDS: http://localhost:3000
+# PLC: http://localhost:3001
+
+services:
+  custom-dev-env:
+    build:
+      context: ../..
+      dockerfile: services/custom-dev-env/Dockerfile
+    ports:
+      - "3000:3000"  # PDS
+      - "3001:3001"  # PLC
+    environment:
+      - NODE_ENV=development
+    # Data is ephemeral (tmp dirs) - restart clears everything
+    restart: unless-stopped
