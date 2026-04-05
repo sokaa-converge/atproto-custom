@@ -1,5 +1,5 @@
-// packages/dev-env/custom/run-pds-plc.ts
-import '../src/env' // Import env first to respect LOG_ENABLED
+// Import env first to respect LOG_ENABLED
+import '../src/env'
 import { TestNetworkNoAppView } from '@atproto/dev-env'
 
 function intEnv(name: string, fallback: number): number {
@@ -19,8 +19,7 @@ async function main() {
   const pdsPort = intEnv('PDS_PORT', 3000)
   const pdsHostname = process.env.PDS_HOSTNAME ?? 'localhost'
   // In single-container Docker, PDS reaches PLC on loopback (not localhost on some OS).
-  const didPlcUrl =
-    process.env.PDS_DID_PLC_URL ?? `http://127.0.0.1:${plcPort}`
+  const didPlcUrl = process.env.PDS_DID_PLC_URL ?? `http://127.0.0.1:${plcPort}`
 
   const pdsPublicUrl =
     nonEmptyEnv('PDS_PUBLIC_URL') ??
