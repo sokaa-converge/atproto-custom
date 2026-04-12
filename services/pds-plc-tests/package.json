@@ -1,0 +1,17 @@
+{
+  "name": "@atproto/pds-plc-tests",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "@atproto/api": "workspace:^"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.3.42",
+    "@swc/jest": "^0.2.24",
+    "@types/jest": "^28.1.4",
+    "jest": "^28.1.2"
+  }
+}
