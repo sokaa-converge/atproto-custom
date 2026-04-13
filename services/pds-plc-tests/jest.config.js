@@ -3,5 +3,5 @@ module.exports = {
   displayName: 'pds-plc-tests',
   transform: { '^.+\\.(t|j)s$': '@swc/jest' },
   testTimeout: 30000,
-  moduleNameMapper: { '^(\\.\\.\?\\/.+)\\.js$': ['$1.ts', '$1.js'] },
+  moduleNameMapper: { '^(\\.\\.?\\/.+)\\.js$': ['$1.ts', '$1.js'] },
 }

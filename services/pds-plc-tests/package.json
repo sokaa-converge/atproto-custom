@@ -6,7 +6,7 @@
     "test:integration": "jest"
   },
   "dependencies": {
-    "@atproto/api": "workspace:^"
+    "@atproto/api": "workspace:@sokaa-converge/atproto-custom-api@*"
   },
   "devDependencies": {
     "@swc/core": "^1.3.42",
