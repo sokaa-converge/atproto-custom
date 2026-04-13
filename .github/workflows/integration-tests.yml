@@ -63,7 +63,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run integration tests
-        run: pnpm --filter @atproto/pds-plc-tests test
+        run: pnpm --filter @atproto/pds-plc-tests test:integration
         env:
           PDS_URL: http://localhost:3000
 
