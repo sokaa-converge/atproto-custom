@@ -2,6 +2,10 @@ const PDS_URL = process.env.PDS_URL ?? 'http://localhost:3000'
 
 // Unique suffix per run so handles never collide across test runs
 const suffix = Date.now().toString(36)
+const TEST_HANDLE = `testuser${suffix}.test`
+
+console.log(`\n🧪 PDS: ${PDS_URL}`)
+console.log(`👤 Handle: ${TEST_HANDLE}\n`)
 
 type JsonBody = Record<string, unknown>
 
@@ -46,7 +50,7 @@ describe('PDS + PLC integration', () => {
   let postUri: string
   let postCid: string
 
-  const handle = `testuser${suffix}.test`
+  const handle = TEST_HANDLE
   const email = `testuser${suffix}@example.com`
   const password = 'hunter2-integration-test'
 
