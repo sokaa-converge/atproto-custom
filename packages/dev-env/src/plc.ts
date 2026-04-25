@@ -14,10 +14,11 @@ export class TestPlc {
     const port = cfg.port || (await getPort())
     const url = `http://localhost:${port}`
 
-    let db: plc.Database
+    let db: plc.PlcDatabase
     if (cfg.dbUrl) {
-      db = plc.Database.postgres({ url: cfg.dbUrl })
-      await db.migrateToLatestOrThrow()
+      const pgDb = plc.Database.postgres({ url: cfg.dbUrl })
+      await pgDb.migrateToLatestOrThrow()
+      db = pgDb
     } else {
       db = plc.Database.mock()
     }
