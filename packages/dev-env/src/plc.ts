@@ -11,9 +11,17 @@ export class TestPlc {
   ) {}
 
   static async create(cfg: PlcConfig): Promise<TestPlc> {
-    const db = plc.Database.mock()
     const port = cfg.port || (await getPort())
     const url = `http://localhost:${port}`
+
+    let db: plc.Database
+    if (cfg.dbUrl) {
+      db = plc.Database.postgres({ url: cfg.dbUrl })
+      await db.migrateToLatestOrThrow()
+    } else {
+      db = plc.Database.mock()
+    }
+
     const server = plc.PlcServer.create({ db, port, ...cfg })
     await server.start()
     return new TestPlc(url, port, server)

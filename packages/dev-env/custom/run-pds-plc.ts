@@ -38,21 +38,37 @@ async function main() {
   const network = await TestNetworkNoAppView.create({
     plc: {
       port: plcPort,
+      ...(process.env.PLC_DB_URL ? { dbUrl: process.env.PLC_DB_URL } : {}),
     },
     pds: {
       port: pdsPort,
       hostname: pdsHostname,
       didPlcUrl,
       inviteRequired: false, // No invite code needed
+      ...(process.env.PDS_DATA_DIRECTORY
+        ? { dataDirectory: process.env.PDS_DATA_DIRECTORY }
+        : {}),
+      ...(process.env.PDS_BLOB_STORE_LOCATION
+        ? { blobstoreDiskLocation: process.env.PDS_BLOB_STORE_LOCATION }
+        : {}),
     },
   })
 
   console.log('✅ Servers running!')
   console.log(`📡 PLC (internal): ${network.plc.url}`)
   console.log(`📡 PLC (clients):  ${plcPublicUrl}`)
+  console.log(
+    `💾 PLC storage:    ${process.env.PLC_DB_URL ? 'Postgres' : 'in-memory mock (ephemeral)'}`,
+  )
   console.log(`📡 PDS (internal): ${network.pds.url}`)
   console.log(`📡 PDS (clients):  ${pdsPublicUrl}`)
   console.log(`📡 PDS DID: ${network.pds.ctx.cfg.service.did}\n`)
+  console.log(
+    `💾 PDS storage:    ${process.env.PDS_DATA_DIRECTORY ?? 'tmpdir (ephemeral)'}`,
+  )
+  console.log(
+    `💾 PDS blobs:      ${process.env.PDS_BLOB_STORE_LOCATION ?? 'tmpdir (ephemeral)'}`,
+  )
   console.log('💡 Point Sokaa / AtpAgent service URL at:', pdsPublicUrl)
   console.log('💡 Press Ctrl+C to stop\n')
 
