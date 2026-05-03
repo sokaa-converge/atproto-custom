@@ -1663,6 +1663,432 @@ export const schemaDict = {
       },
     },
   },
+  AppBskyAuthCreatePosts: {
+    lexicon: 1,
+    id: 'app.bsky.authCreatePosts',
+    defs: {
+      main: {
+        type: 'permission-set',
+        title: 'Create Bluesky Posts',
+        'title:lang': {},
+        detail: 'Can not update or delete posts.',
+        'detail:lang': {},
+        permissions: [
+          {
+            type: 'permission',
+            resource: 'rpc',
+            inheritAud: true,
+            lxm: [
+              'app.bsky.video.uploadVideo',
+              'app.bsky.video.getJobStatus',
+              'app.bsky.video.getUploadLimits',
+            ],
+          },
+          {
+            type: 'permission',
+            resource: 'repo',
+            action: ['create'],
+            collection: [
+              'app.bsky.feed.post',
+              'app.bsky.feed.postgate',
+              'app.bsky.feed.threadgate',
+            ],
+          },
+        ],
+      },
+    },
+  },
+  AppBskyAuthDeleteContent: {
+    lexicon: 1,
+    id: 'app.bsky.authDeleteContent',
+    defs: {
+      main: {
+        type: 'permission-set',
+        title: 'Delete Bluesky Content',
+        'title:lang': {},
+        detail: 'Clean up public account history: posts, reposts, and likes.',
+        'detail:lang': {},
+        permissions: [
+          {
+            type: 'permission',
+            resource: 'repo',
+            action: ['delete'],
+            collection: [
+              'app.bsky.feed.like',
+              'app.bsky.feed.post',
+              'app.bsky.feed.postgate',
+              'app.bsky.feed.repost',
+              'app.bsky.feed.threadgate',
+            ],
+          },
+        ],
+      },
+    },
+  },
+  AppBskyAuthFullApp: {
+    lexicon: 1,
+    id: 'app.bsky.authFullApp',
+    defs: {
+      main: {
+        type: 'permission-set',
+        title: 'Full Bluesky Social App Permissions',
+        'title:lang': {},
+        detail:
+          'Manage all public content and interactions, private preferences and subscriptions, and other Bluesky-specific app features and data.',
+        'detail:lang': {},
+        permissions: [
+          {
+            type: 'permission',
+            resource: 'rpc',
+            inheritAud: true,
+            lxm: [
+              'app.bsky.actor.getPreferences',
+              'app.bsky.actor.getProfile',
+              'app.bsky.actor.getProfiles',
+              'app.bsky.actor.getSuggestions',
+              'app.bsky.actor.putPreferences',
+              'app.bsky.actor.searchActors',
+              'app.bsky.actor.searchActorsTypeahead',
+              'app.bsky.bookmark.createBookmark',
+              'app.bsky.bookmark.deleteBookmark',
+              'app.bsky.bookmark.getBookmarks',
+              'app.bsky.contact.dismissMatch',
+              'app.bsky.contact.getMatches',
+              'app.bsky.contact.getSyncStatus',
+              'app.bsky.contact.importContacts',
+              'app.bsky.contact.removeData',
+              'app.bsky.contact.startPhoneVerification',
+              'app.bsky.contact.verifyPhone',
+              'app.bsky.feed.describeFeedGenerator',
+              'app.bsky.feed.getActorFeeds',
+              'app.bsky.feed.getActorLikes',
+              'app.bsky.feed.getAuthorFeed',
+              'app.bsky.feed.getFeed',
+              'app.bsky.feed.getFeedGenerator',
+              'app.bsky.feed.getFeedGenerators',
+              'app.bsky.feed.getFeedSkeleton',
+              'app.bsky.feed.getLikes',
+              'app.bsky.feed.getListFeed',
+              'app.bsky.feed.getPostThread',
+              'app.bsky.feed.getPosts',
+              'app.bsky.feed.getQuotes',
+              'app.bsky.feed.getRepostedBy',
+              'app.bsky.feed.getSuggestedFeeds',
+              'app.bsky.feed.getTimeline',
+              'app.bsky.feed.searchPosts',
+              'app.bsky.feed.sendInteractions',
+              'app.bsky.graph.getActorStarterPacks',
+              'app.bsky.graph.getBlocks',
+              'app.bsky.graph.getFollowers',
+              'app.bsky.graph.getFollows',
+              'app.bsky.graph.getKnownFollowers',
+              'app.bsky.graph.getList',
+              'app.bsky.graph.getListBlocks',
+              'app.bsky.graph.getListMutes',
+              'app.bsky.graph.getLists',
+              'app.bsky.graph.getListsWithMembership',
+              'app.bsky.graph.getMutes',
+              'app.bsky.graph.getRelationships',
+              'app.bsky.graph.getStarterPack',
+              'app.bsky.graph.getStarterPacks',
+              'app.bsky.graph.getStarterPacksWithMembership',
+              'app.bsky.graph.getSuggestedFollowsByActor',
+              'app.bsky.graph.muteActor',
+              'app.bsky.graph.muteActorList',
+              'app.bsky.graph.muteThread',
+              'app.bsky.graph.searchStarterPacks',
+              'app.bsky.graph.unmuteActor',
+              'app.bsky.graph.unmuteActorList',
+              'app.bsky.graph.unmuteThread',
+              'app.bsky.labeler.getServices',
+              'app.bsky.notification.getPreferences',
+              'app.bsky.notification.getUnreadCount',
+              'app.bsky.notification.listActivitySubscriptions',
+              'app.bsky.notification.listNotifications',
+              'app.bsky.notification.putActivitySubscription',
+              'app.bsky.notification.putPreferences',
+              'app.bsky.notification.putPreferencesV2',
+              'app.bsky.notification.registerPush',
+              'app.bsky.notification.registerPush',
+              'app.bsky.notification.unregisterPush',
+              'app.bsky.notification.updateSeen',
+              'app.bsky.unspecced.getAgeAssuranceState',
+              'app.bsky.unspecced.getConfig',
+              'app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
+              'app.bsky.unspecced.getPopularFeedGenerators',
+              'app.bsky.unspecced.getPostThreadOtherV2',
+              'app.bsky.unspecced.getPostThreadV2',
+              'app.bsky.unspecced.getSuggestedFeeds',
+              'app.bsky.unspecced.getSuggestedFeedsSkeleton',
+              'app.bsky.unspecced.getSuggestedStarterPacks',
+              'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
+              'app.bsky.unspecced.getSuggestedUsers',
+              'app.bsky.unspecced.getSuggestedUsersSkeleton',
+              'app.bsky.unspecced.getSuggestionsSkeleton',
+              'app.bsky.unspecced.getTaggedSuggestions',
+              'app.bsky.unspecced.getTrendingTopics',
+              'app.bsky.unspecced.getTrends',
+              'app.bsky.unspecced.getTrendsSkeleton',
+              'app.bsky.unspecced.initAgeAssurance',
+              'app.bsky.unspecced.searchActorsSkeleton',
+              'app.bsky.unspecced.searchPostsSkeleton',
+              'app.bsky.unspecced.searchStarterPacksSkeleton',
+              'app.bsky.video.getJobStatus',
+              'app.bsky.video.getUploadLimits',
+              'app.bsky.video.uploadVideo',
+            ],
+          },
+          {
+            type: 'permission',
+            resource: 'repo',
+            action: ['create', 'update', 'delete'],
+            collection: [
+              'app.bsky.actor.profile',
+              'app.bsky.actor.status',
+              'app.bsky.feed.like',
+              'app.bsky.feed.post',
+              'app.bsky.feed.postgate',
+              'app.bsky.feed.repost',
+              'app.bsky.feed.threadgate',
+              'app.bsky.graph.block',
+              'app.bsky.graph.follow',
+              'app.bsky.graph.list',
+              'app.bsky.graph.listblock',
+              'app.bsky.graph.listitem',
+              'app.bsky.graph.starterpack',
+              'app.bsky.notification.declaration',
+            ],
+          },
+        ],
+      },
+    },
+  },
+  AppBskyAuthManageFeedDeclarations: {
+    lexicon: 1,
+    id: 'app.bsky.authManageFeedDeclarations',
+    defs: {
+      main: {
+        type: 'permission-set',
+        title: 'Manage Hosted Feeds',
+        'title:lang': {},
+        detail: 'Configure feed generator declaration records.',
+        'detail:lang': {},
+        permissions: [
+          {
+            type: 'permission',
+            resource: 'repo',
+            action: ['create', 'update', 'delete'],
+            collection: ['app.bsky.feed.generator'],
+          },
+        ],
+      },
+    },
+  },
+  AppBskyAuthManageLabelerService: {
+    lexicon: 1,
+    id: 'app.bsky.authManageLabelerService',
+    defs: {
+      main: {
+        type: 'permission-set',
+        title: 'Manage Hosted Labeling Service',
+        'title:lang': {},
+        detail: 'Configure labeler declaration records.',
+        'detail:lang': {},
+        permissions: [
+          {
+            type: 'permission',
+            resource: 'repo',
+            action: ['create', 'update', 'delete'],
+            collection: ['app.bsky.labeler.service'],
+          },
+        ],
+      },
+    },
+  },
+  AppBskyAuthManageModeration: {
+    lexicon: 1,
+    id: 'app.bsky.authManageModeration',
+    defs: {
+      main: {
+        type: 'permission-set',
+        title: 'Manage Personal Moderation',
+        'title:lang': {},
+        detail:
+          'Control over blocks, mutes, mod lists, mod services, and preferences.',
+        'detail:lang': {},
+        permissions: [
+          {
+            type: 'permission',
+            resource: 'rpc',
+            inheritAud: true,
+            lxm: [
+              'app.bsky.actor.getPreferences',
+              'app.bsky.actor.putPreferences',
+              'app.bsky.graph.muteActor',
+              'app.bsky.graph.muteActorList',
+              'app.bsky.graph.muteThread',
+              'app.bsky.graph.unmuteActor',
+              'app.bsky.graph.unmuteActorList',
+              'app.bsky.graph.unmuteThread',
+            ],
+          },
+          {
+            type: 'permission',
+            resource: 'repo',
+            action: ['create', 'update', 'delete'],
+            collection: ['app.bsky.graph.block', 'app.bsky.graph.listblock'],
+          },
+        ],
+      },
+    },
+  },
+  AppBskyAuthManageNotifications: {
+    lexicon: 1,
+    id: 'app.bsky.authManageNotifications',
+    defs: {
+      main: {
+        type: 'permission-set',
+        title: 'Manage Bluesky Notifications',
+        'title:lang': {},
+        detail: 'View and configure notifications for the Bluesky app.',
+        'detail:lang': {},
+        permissions: [
+          {
+            type: 'permission',
+            resource: 'rpc',
+            inheritAud: true,
+            lxm: [
+              'app.bsky.notification.getPreferences',
+              'app.bsky.notification.getUnreadCount',
+              'app.bsky.notification.listActivitySubscriptions',
+              'app.bsky.notification.listNotifications',
+              'app.bsky.notification.putActivitySubscription',
+              'app.bsky.notification.putPreferences',
+              'app.bsky.notification.putPreferencesV2',
+              'app.bsky.notification.registerPush',
+              'app.bsky.notification.unregisterPush',
+              'app.bsky.notification.updateSeen',
+            ],
+          },
+        ],
+      },
+    },
+  },
+  AppBskyAuthManageProfile: {
+    lexicon: 1,
+    id: 'app.bsky.authManageProfile',
+    defs: {
+      main: {
+        type: 'permission-set',
+        title: 'Manage Bluesky Profile',
+        'title:lang': {},
+        detail:
+          'Update profile data, as well as status and public chat visibility.',
+        'detail:lang': {},
+        permissions: [
+          {
+            type: 'permission',
+            resource: 'repo',
+            action: ['create', 'update', 'delete'],
+            collection: [
+              'app.bsky.actor.profile',
+              'app.bsky.actor.status',
+              'app.bsky.notification.declaration',
+            ],
+          },
+        ],
+      },
+    },
+  },
+  AppBskyAuthViewAll: {
+    lexicon: 1,
+    id: 'app.bsky.authViewAll',
+    defs: {
+      main: {
+        type: 'permission-set',
+        title: 'Read-only access to all content',
+        'title:lang': {},
+        detail:
+          'View Bluesky network content from account perspective, and read all notifications and preferences.',
+        'detail:lang': {},
+        permissions: [
+          {
+            type: 'permission',
+            resource: 'rpc',
+            inheritAud: true,
+            lxm: [
+              'app.bsky.actor.getProfile',
+              'app.bsky.actor.getProfiles',
+              'app.bsky.actor.getSuggestions',
+              'app.bsky.actor.searchActors',
+              'app.bsky.actor.searchActorsTypeahead',
+              'app.bsky.bookmark.getBookmarks',
+              'app.bsky.feed.describeFeedGenerator',
+              'app.bsky.feed.getActorFeeds',
+              'app.bsky.feed.getActorLikes',
+              'app.bsky.feed.getAuthorFeed',
+              'app.bsky.feed.getFeed',
+              'app.bsky.feed.getFeedGenerator',
+              'app.bsky.feed.getFeedGenerators',
+              'app.bsky.feed.getFeedSkeleton',
+              'app.bsky.feed.getLikes',
+              'app.bsky.feed.getListFeed',
+              'app.bsky.feed.getPostThread',
+              'app.bsky.feed.getPosts',
+              'app.bsky.feed.getQuotes',
+              'app.bsky.feed.getRepostedBy',
+              'app.bsky.feed.getSuggestedFeeds',
+              'app.bsky.feed.getTimeline',
+              'app.bsky.feed.searchPosts',
+              'app.bsky.graph.getActorStarterPacks',
+              'app.bsky.graph.getBlocks',
+              'app.bsky.graph.getFollowers',
+              'app.bsky.graph.getFollows',
+              'app.bsky.graph.getKnownFollowers',
+              'app.bsky.graph.getListBlocks',
+              'app.bsky.graph.getListMutes',
+              'app.bsky.graph.getLists',
+              'app.bsky.graph.getListsWithMembership',
+              'app.bsky.graph.getMutes',
+              'app.bsky.graph.getRelationships',
+              'app.bsky.graph.getStarterPack',
+              'app.bsky.graph.getStarterPacks',
+              'app.bsky.graph.getStarterPacksWithMembership',
+              'app.bsky.graph.getSuggestedFollowsByActor',
+              'app.bsky.graph.searchStarterPacks',
+              'app.bsky.labeler.getServices',
+              'app.bsky.notification.getPreferences',
+              'app.bsky.notification.getUnreadCount',
+              'app.bsky.notification.listActivitySubscriptions',
+              'app.bsky.notification.listNotifications',
+              'app.bsky.notification.updateSeen',
+              'app.bsky.unspecced.getAgeAssuranceState',
+              'app.bsky.unspecced.getConfig',
+              'app.bsky.unspecced.getOnboardingSuggestedStarterPacks',
+              'app.bsky.unspecced.getPopularFeedGenerators',
+              'app.bsky.unspecced.getPostThreadOtherV2',
+              'app.bsky.unspecced.getPostThreadV2',
+              'app.bsky.unspecced.getSuggestedFeeds',
+              'app.bsky.unspecced.getSuggestedFeedsSkeleton',
+              'app.bsky.unspecced.getSuggestedStarterPacks',
+              'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
+              'app.bsky.unspecced.getSuggestedUsers',
+              'app.bsky.unspecced.getSuggestedUsersSkeleton',
+              'app.bsky.unspecced.getSuggestionsSkeleton',
+              'app.bsky.unspecced.getTaggedSuggestions',
+              'app.bsky.unspecced.getTrendingTopics',
+              'app.bsky.unspecced.getTrends',
+              'app.bsky.unspecced.getTrendsSkeleton',
+              'app.bsky.unspecced.searchActorsSkeleton',
+              'app.bsky.unspecced.searchPostsSkeleton',
+              'app.bsky.unspecced.searchStarterPacksSkeleton',
+              'app.bsky.video.getUploadLimits',
+            ],
+          },
+        ],
+      },
+    },
+  },
   AppBskyBookmarkCreateBookmark: {
     lexicon: 1,
     id: 'app.bsky.bookmark.createBookmark',
@@ -9202,6 +9628,635 @@ export const schemaDict = {
       },
     },
   },
+  AppSokaaActorDefs: {
+    lexicon: 1,
+    id: 'app.sokaa.actor.defs',
+    defs: {
+      profileViewBasic: {
+        type: 'object',
+        description:
+          'Minimal actor information, used when embedding author info in post views.',
+        required: ['did', 'handle'],
+        properties: {
+          did: {
+            type: 'string',
+            format: 'did',
+          },
+          handle: {
+            type: 'string',
+            format: 'handle',
+          },
+          displayName: {
+            type: 'string',
+            maxGraphemes: 64,
+            maxLength: 640,
+          },
+          avatar: {
+            type: 'string',
+            format: 'uri',
+            description: 'CDN URL of the avatar image.',
+          },
+        },
+      },
+      profileView: {
+        type: 'object',
+        description:
+          'Full profile view, returned by app.sokaa.actor.getProfile.',
+        required: ['did', 'handle'],
+        properties: {
+          did: {
+            type: 'string',
+            format: 'did',
+          },
+          handle: {
+            type: 'string',
+            format: 'handle',
+          },
+          displayName: {
+            type: 'string',
+            maxGraphemes: 64,
+            maxLength: 640,
+          },
+          description: {
+            type: 'string',
+            maxGraphemes: 256,
+            maxLength: 2560,
+          },
+          avatar: {
+            type: 'string',
+            format: 'uri',
+          },
+          banner: {
+            type: 'string',
+            format: 'uri',
+          },
+          website: {
+            type: 'string',
+            format: 'uri',
+          },
+          followersCount: {
+            type: 'integer',
+            minimum: 0,
+          },
+          followsCount: {
+            type: 'integer',
+            minimum: 0,
+          },
+          postsCount: {
+            type: 'integer',
+            minimum: 0,
+          },
+          viewer: {
+            type: 'ref',
+            ref: 'lex:app.sokaa.actor.defs#viewerState',
+            description:
+              'Relationship between the authenticated user and this profile.',
+          },
+          indexedAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+        },
+      },
+      viewerState: {
+        type: 'object',
+        description: "Authenticated viewer's relationship to this actor.",
+        properties: {
+          following: {
+            type: 'string',
+            format: 'at-uri',
+            description:
+              "AT-URI of the viewer's follow record for this actor, if they follow them.",
+          },
+          followedBy: {
+            type: 'string',
+            format: 'at-uri',
+            description:
+              "AT-URI of this actor's follow record for the viewer, if they follow back.",
+          },
+        },
+      },
+    },
+  },
+  AppSokaaActorGetProfile: {
+    lexicon: 1,
+    id: 'app.sokaa.actor.getProfile',
+    defs: {
+      main: {
+        type: 'query',
+        description:
+          'Get a full profile view for an actor. Publicly accessible.',
+        parameters: {
+          type: 'params',
+          required: ['actor'],
+          properties: {
+            actor: {
+              type: 'string',
+              format: 'at-identifier',
+              description: 'The handle or DID of the account to fetch.',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'ref',
+            ref: 'lex:app.sokaa.actor.defs#profileView',
+          },
+        },
+      },
+    },
+  },
+  AppSokaaActorProfile: {
+    lexicon: 1,
+    id: 'app.sokaa.actor.profile',
+    defs: {
+      main: {
+        type: 'record',
+        description:
+          "A Sokaa user profile. One record per account, stored at key 'self'.",
+        key: 'literal:self',
+        record: {
+          type: 'object',
+          properties: {
+            displayName: {
+              type: 'string',
+              maxGraphemes: 64,
+              maxLength: 640,
+            },
+            description: {
+              type: 'string',
+              description: 'A short bio displayed on the profile.',
+              maxGraphemes: 256,
+              maxLength: 2560,
+            },
+            avatar: {
+              type: 'blob',
+              description: 'Profile picture.',
+              accept: ['image/png', 'image/jpeg'],
+              maxSize: 1000000,
+            },
+            banner: {
+              type: 'blob',
+              description: 'Profile banner image.',
+              accept: ['image/png', 'image/jpeg'],
+              maxSize: 1000000,
+            },
+            website: {
+              type: 'string',
+              format: 'uri',
+              description: 'Optional external website URL.',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+    },
+  },
+  AppSokaaEmbedImages: {
+    lexicon: 1,
+    id: 'app.sokaa.embed.images',
+    description: 'One or more images embedded in a Sokaa post.',
+    defs: {
+      main: {
+        type: 'object',
+        required: ['images'],
+        properties: {
+          images: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:app.sokaa.embed.images#image',
+            },
+            minLength: 1,
+            maxLength: 4,
+          },
+        },
+      },
+      image: {
+        type: 'object',
+        required: ['image', 'alt'],
+        properties: {
+          image: {
+            type: 'blob',
+            accept: ['image/png', 'image/jpeg', 'image/webp'],
+            maxSize: 10000000,
+          },
+          alt: {
+            type: 'string',
+            description: 'Alt text for the image, for accessibility.',
+            maxGraphemes: 1000,
+            maxLength: 10000,
+          },
+          aspectRatio: {
+            type: 'ref',
+            ref: 'lex:app.sokaa.embed.video#aspectRatio',
+          },
+        },
+      },
+      view: {
+        type: 'object',
+        required: ['images'],
+        properties: {
+          images: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:app.sokaa.embed.images#viewImage',
+            },
+            minLength: 1,
+            maxLength: 4,
+          },
+        },
+      },
+      viewImage: {
+        type: 'object',
+        required: ['thumb', 'fullsize', 'alt'],
+        properties: {
+          thumb: {
+            type: 'string',
+            format: 'uri',
+          },
+          fullsize: {
+            type: 'string',
+            format: 'uri',
+          },
+          alt: {
+            type: 'string',
+            maxGraphemes: 1000,
+            maxLength: 10000,
+          },
+          aspectRatio: {
+            type: 'ref',
+            ref: 'lex:app.sokaa.embed.video#aspectRatio',
+          },
+        },
+      },
+    },
+  },
+  AppSokaaEmbedVideo: {
+    lexicon: 1,
+    id: 'app.sokaa.embed.video',
+    description: 'A video embedded in a Sokaa post.',
+    defs: {
+      main: {
+        type: 'object',
+        required: ['video'],
+        properties: {
+          video: {
+            type: 'blob',
+            description: 'The mp4 video file. Maximum 100MB.',
+            accept: ['video/mp4'],
+            maxSize: 100000000,
+          },
+          thumbnail: {
+            type: 'blob',
+            description: 'A still image preview frame for the video.',
+            accept: ['image/jpeg', 'image/png'],
+            maxSize: 1000000,
+          },
+          alt: {
+            type: 'string',
+            description:
+              'Alt text description of the video, for accessibility.',
+            maxGraphemes: 1000,
+            maxLength: 10000,
+          },
+          duration: {
+            type: 'integer',
+            description: 'Duration of the video in seconds.',
+            minimum: 0,
+          },
+          aspectRatio: {
+            type: 'ref',
+            ref: 'lex:app.sokaa.embed.video#aspectRatio',
+          },
+        },
+      },
+      aspectRatio: {
+        type: 'object',
+        description: 'Width:height ratio of the video frame.',
+        required: ['width', 'height'],
+        properties: {
+          width: {
+            type: 'integer',
+            minimum: 1,
+          },
+          height: {
+            type: 'integer',
+            minimum: 1,
+          },
+        },
+      },
+      view: {
+        type: 'object',
+        description: 'Hydrated video view returned by the AppView.',
+        required: ['cid', 'playlist'],
+        properties: {
+          cid: {
+            type: 'string',
+            format: 'cid',
+          },
+          playlist: {
+            type: 'string',
+            format: 'uri',
+            description: 'HLS/DASH playlist URL served by the media CDN.',
+          },
+          thumbnail: {
+            type: 'string',
+            format: 'uri',
+          },
+          alt: {
+            type: 'string',
+            maxGraphemes: 1000,
+            maxLength: 10000,
+          },
+          duration: {
+            type: 'integer',
+            minimum: 0,
+          },
+          aspectRatio: {
+            type: 'ref',
+            ref: 'lex:app.sokaa.embed.video#aspectRatio',
+          },
+        },
+      },
+    },
+  },
+  AppSokaaFeedDefs: {
+    lexicon: 1,
+    id: 'app.sokaa.feed.defs',
+    defs: {
+      postView: {
+        type: 'object',
+        description:
+          'A fully hydrated view of a Sokaa post, as returned by the AppView.',
+        required: ['uri', 'cid', 'author', 'record', 'indexedAt'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          cid: {
+            type: 'string',
+            format: 'cid',
+          },
+          author: {
+            type: 'ref',
+            ref: 'lex:app.sokaa.actor.defs#profileViewBasic',
+          },
+          record: {
+            type: 'unknown',
+            description: 'The raw app.sokaa.feed.post record.',
+          },
+          embed: {
+            type: 'union',
+            description: 'Hydrated media embed (CDN URLs resolved).',
+            refs: [
+              'lex:app.sokaa.embed.video#view',
+              'lex:app.sokaa.embed.images#view',
+            ],
+          },
+          likeCount: {
+            type: 'integer',
+            minimum: 0,
+          },
+          viewer: {
+            type: 'ref',
+            ref: 'lex:app.sokaa.feed.defs#viewerState',
+          },
+          indexedAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+        },
+      },
+      feedViewPost: {
+        type: 'object',
+        description: 'A post as it appears in a feed list response.',
+        required: ['post'],
+        properties: {
+          post: {
+            type: 'ref',
+            ref: 'lex:app.sokaa.feed.defs#postView',
+          },
+        },
+      },
+      viewerState: {
+        type: 'object',
+        description: "Authenticated viewer's interaction state with a post.",
+        properties: {
+          like: {
+            type: 'string',
+            format: 'at-uri',
+            description:
+              "AT-URI of the viewer's like record for this post, if they liked it.",
+          },
+        },
+      },
+    },
+  },
+  AppSokaaFeedGetAuthorFeed: {
+    lexicon: 1,
+    id: 'app.sokaa.feed.getAuthorFeed',
+    defs: {
+      main: {
+        type: 'query',
+        description:
+          'Get a list of posts by a specific actor, newest first. Publicly accessible.',
+        parameters: {
+          type: 'params',
+          required: ['actor'],
+          properties: {
+            actor: {
+              type: 'string',
+              format: 'at-identifier',
+              description:
+                'The handle or DID of the account whose posts to fetch.',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['feed'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              feed: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.sokaa.feed.defs#feedViewPost',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppSokaaFeedGetTimeline: {
+    lexicon: 1,
+    id: 'app.sokaa.feed.getTimeline',
+    defs: {
+      main: {
+        type: 'query',
+        description:
+          'Get the home timeline for the authenticated user — posts from accounts they follow, newest first.',
+        parameters: {
+          type: 'params',
+          properties: {
+            limit: {
+              type: 'integer',
+              description: 'Maximum number of posts to return.',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+              description: 'Pagination cursor from a previous response.',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['feed'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              feed: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.sokaa.feed.defs#feedViewPost',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppSokaaFeedLike: {
+    lexicon: 1,
+    id: 'app.sokaa.feed.like',
+    defs: {
+      main: {
+        type: 'record',
+        description:
+          "Record declaring a like of a Sokaa post. Stored in the liker's repo.",
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['subject', 'createdAt'],
+          properties: {
+            subject: {
+              type: 'ref',
+              ref: 'lex:com.atproto.repo.strongRef',
+              description:
+                'The post being liked, identified by its AT-URI and CID.',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+    },
+  },
+  AppSokaaFeedPost: {
+    lexicon: 1,
+    id: 'app.sokaa.feed.post',
+    defs: {
+      main: {
+        type: 'record',
+        description:
+          'A Sokaa post. Media (video or images) is required; caption is optional.',
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['media', 'createdAt'],
+          properties: {
+            caption: {
+              type: 'string',
+              description: 'Optional caption displayed below the media.',
+              maxGraphemes: 300,
+              maxLength: 3000,
+            },
+            media: {
+              type: 'union',
+              description:
+                'The primary media content of the post. Must be a video or one or more images.',
+              refs: ['lex:app.sokaa.embed.video', 'lex:app.sokaa.embed.images'],
+            },
+            tags: {
+              type: 'array',
+              description: 'Hashtags associated with the post.',
+              maxLength: 8,
+              items: {
+                type: 'string',
+                maxGraphemes: 64,
+                maxLength: 640,
+              },
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+              description:
+                'Client-declared timestamp when this post was originally created.',
+            },
+          },
+        },
+      },
+    },
+  },
+  AppSokaaGraphFollow: {
+    lexicon: 1,
+    id: 'app.sokaa.graph.follow',
+    defs: {
+      main: {
+        type: 'record',
+        description:
+          "Record declaring a follow relationship. Stored in the follower's repo; subject is the DID of the account being followed.",
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['subject', 'createdAt'],
+          properties: {
+            subject: {
+              type: 'string',
+              format: 'did',
+              description: 'The DID of the account being followed.',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+    },
+  },
   ChatBskyActorDeclaration: {
     lexicon: 1,
     id: 'chat.bsky.actor.declaration',
@@ -9301,6 +10356,56 @@ export const schemaDict = {
         output: {
           encoding: 'application/jsonl',
         },
+      },
+    },
+  },
+  ChatBskyAuthFullChatClient: {
+    lexicon: 1,
+    id: 'chat.bsky.authFullChatClient',
+    defs: {
+      main: {
+        type: 'permission-set',
+        title: 'Full Chat Client (All Conversations)',
+        'title:lang': {},
+        detail:
+          'Control of all chat conversations and configuration management.',
+        'detail:lang': {
+          en: 'All Chat Conversations',
+        },
+        permissions: [
+          {
+            type: 'permission',
+            resource: 'rpc',
+            inheritAud: true,
+            lxm: [
+              'chat.bsky.actor.deleteAccount',
+              'chat.bsky.convo.acceptConvo',
+              'chat.bsky.convo.addReaction',
+              'chat.bsky.convo.deleteMessageForSelf',
+              'chat.bsky.convo.exportAccountData',
+              'chat.bsky.convo.getConvo',
+              'chat.bsky.convo.getConvoAvailability',
+              'chat.bsky.convo.getConvoForMembers',
+              'chat.bsky.convo.getLog',
+              'chat.bsky.convo.getMessages',
+              'chat.bsky.convo.leaveConvo',
+              'chat.bsky.convo.listConvos',
+              'chat.bsky.convo.muteConvo',
+              'chat.bsky.convo.removeReaction',
+              'chat.bsky.convo.sendMessage',
+              'chat.bsky.convo.sendMessageBatch',
+              'chat.bsky.convo.unmuteConvo',
+              'chat.bsky.convo.updateAllRead',
+              'chat.bsky.convo.updateRead',
+            ],
+          },
+          {
+            type: 'permission',
+            resource: 'repo',
+            action: ['create', 'update', 'delete'],
+            collection: ['chat.bsky.actor.declaration'],
+          },
+        ],
       },
     },
   },
@@ -20531,6 +21636,15 @@ export const ids = {
   AppBskyAgeassuranceDefs: 'app.bsky.ageassurance.defs',
   AppBskyAgeassuranceGetConfig: 'app.bsky.ageassurance.getConfig',
   AppBskyAgeassuranceGetState: 'app.bsky.ageassurance.getState',
+  AppBskyAuthCreatePosts: 'app.bsky.authCreatePosts',
+  AppBskyAuthDeleteContent: 'app.bsky.authDeleteContent',
+  AppBskyAuthFullApp: 'app.bsky.authFullApp',
+  AppBskyAuthManageFeedDeclarations: 'app.bsky.authManageFeedDeclarations',
+  AppBskyAuthManageLabelerService: 'app.bsky.authManageLabelerService',
+  AppBskyAuthManageModeration: 'app.bsky.authManageModeration',
+  AppBskyAuthManageNotifications: 'app.bsky.authManageNotifications',
+  AppBskyAuthManageProfile: 'app.bsky.authManageProfile',
+  AppBskyAuthViewAll: 'app.bsky.authViewAll',
   AppBskyBookmarkCreateBookmark: 'app.bsky.bookmark.createBookmark',
   AppBskyBookmarkDefs: 'app.bsky.bookmark.defs',
   AppBskyBookmarkDeleteBookmark: 'app.bsky.bookmark.deleteBookmark',
@@ -20673,10 +21787,22 @@ export const ids = {
   AppBskyVideoGetJobStatus: 'app.bsky.video.getJobStatus',
   AppBskyVideoGetUploadLimits: 'app.bsky.video.getUploadLimits',
   AppBskyVideoUploadVideo: 'app.bsky.video.uploadVideo',
+  AppSokaaActorDefs: 'app.sokaa.actor.defs',
+  AppSokaaActorGetProfile: 'app.sokaa.actor.getProfile',
+  AppSokaaActorProfile: 'app.sokaa.actor.profile',
+  AppSokaaEmbedImages: 'app.sokaa.embed.images',
+  AppSokaaEmbedVideo: 'app.sokaa.embed.video',
+  AppSokaaFeedDefs: 'app.sokaa.feed.defs',
+  AppSokaaFeedGetAuthorFeed: 'app.sokaa.feed.getAuthorFeed',
+  AppSokaaFeedGetTimeline: 'app.sokaa.feed.getTimeline',
+  AppSokaaFeedLike: 'app.sokaa.feed.like',
+  AppSokaaFeedPost: 'app.sokaa.feed.post',
+  AppSokaaGraphFollow: 'app.sokaa.graph.follow',
   ChatBskyActorDeclaration: 'chat.bsky.actor.declaration',
   ChatBskyActorDefs: 'chat.bsky.actor.defs',
   ChatBskyActorDeleteAccount: 'chat.bsky.actor.deleteAccount',
   ChatBskyActorExportAccountData: 'chat.bsky.actor.exportAccountData',
+  ChatBskyAuthFullChatClient: 'chat.bsky.authFullChatClient',
   ChatBskyConvoAcceptConvo: 'chat.bsky.convo.acceptConvo',
   ChatBskyConvoAddReaction: 'chat.bsky.convo.addReaction',
   ChatBskyConvoDefs: 'chat.bsky.convo.defs',

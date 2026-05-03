@@ -6,9 +6,22 @@ import { type LexiconDoc, parseLexiconDoc } from '@atproto/lexicon'
 import { type FileDiff, type GeneratedAPI } from './types'
 
 export function readAllLexicons(paths: string[]): LexiconDoc[] {
-  paths = [...paths].sort() // incoming path order may have come from locale-dependent shell globs
+  // On Windows the shell does not expand glob patterns before passing args to
+  // the process (unlike bash/zsh on Linux/Mac). Expand manually so codegen
+  // works cross-platform.
+  const expanded: string[] = []
+  for (const p of paths) {
+    if (p.includes('*')) {
+      // Walk the non-glob prefix directory and collect all .json files
+      const baseDir = p.substring(0, p.indexOf('*')).replace(/[\\/]+$/, '')
+      collectJsonFiles(baseDir, expanded)
+    } else {
+      expanded.push(p)
+    }
+  }
+  expanded.sort()
   const docs: LexiconDoc[] = []
-  for (const path of paths) {
+  for (const path of expanded) {
     if (!path.endsWith('.json') || !fs.statSync(path).isFile()) {
       continue
     }
@@ -148,4 +161,16 @@ function readdirRecursiveSync(root: string, files: string[] = [], prefix = '') {
 
 function dedup(arr: string[]): string[] {
   return Array.from(new Set(arr))
+}
+
+function collectJsonFiles(dir: string, acc: string[]): void {
+  if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) return
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name)
+    if (entry.isDirectory()) {
+      collectJsonFiles(full, acc)
+    } else if (entry.name.endsWith('.json')) {
+      acc.push(full)
+    }
+  }
 }
