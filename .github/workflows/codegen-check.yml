@@ -1,0 +1,48 @@
+name: codegen-check
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'lexicons/**'
+      - 'packages/lex-cli/src/**'
+
+jobs:
+  codegen-check:
+    name: Verify generated files are up to date
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build lex-cli
+        run: pnpm --filter @atproto/lex-cli build
+
+      - name: Run PDS codegen
+        run: pnpm --filter @atproto/pds codegen
+
+      - name: Fail if generated files are stale
+        run: |
+          if ! git diff --quiet; then
+            echo ""
+            echo "Generated files are out of date."
+            echo "Run 'pnpm --filter @atproto/pds codegen' locally and commit the result."
+            echo ""
+            git diff --stat
+            exit 1
+          fi
+          echo "Generated files are up to date."
