@@ -37,11 +37,14 @@ jobs:
 
       - name: Fail if generated files are stale
         run: |
-          if ! git diff --quiet; then
+          # git diff catches modified files; git status --porcelain also catches
+          # new untracked files (e.g. a brand-new lexicon's generated type file).
+          if [ -n "$(git status --porcelain)" ]; then
             echo ""
             echo "Generated files are out of date."
             echo "Run 'pnpm --filter @atproto/pds codegen' locally and commit the result."
             echo ""
+            git status --short
             git diff --stat
             exit 1
           fi

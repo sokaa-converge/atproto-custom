@@ -163,6 +163,10 @@ function dedup(arr: string[]): string[] {
   return Array.from(new Set(arr))
 }
 
+// Recursively collects all .json files under dir. Note: this is intentionally
+// depth-unbounded — unlike a literal shell glob (e.g. */*), it will also find
+// files nested deeper than the pattern implies. That's fine for lexicon trees
+// where the convention is at most two levels deep.
 function collectJsonFiles(dir: string, acc: string[]): void {
   if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) return
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
