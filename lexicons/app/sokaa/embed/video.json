@@ -9,9 +9,9 @@
       "properties": {
         "video": {
           "type": "blob",
-          "description": "The mp4 video file. Maximum 100MB.",
+          "description": "The video file. Maximum 500MB (supports up to 4K resolution).",
           "accept": ["video/mp4"],
-          "maxSize": 100000000
+          "maxSize": 500000000
         },
         "thumbnail": {
           "type": "blob",

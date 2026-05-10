@@ -14,7 +14,8 @@
           "ref": "app.sokaa.actor.defs#profileViewBasic"
         },
         "record": {
-          "type": "unknown",
+          "type": "ref",
+          "ref": "app.sokaa.feed.post",
           "description": "The raw app.sokaa.feed.post record."
         },
         "embed": {

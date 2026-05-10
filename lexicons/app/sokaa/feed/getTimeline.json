@@ -13,7 +13,7 @@
             "description": "Maximum number of posts to return.",
             "minimum": 1,
             "maximum": 100,
-            "default": 50
+            "default": 30
           },
           "cursor": {
             "type": "string",

@@ -10,6 +10,7 @@ import {
   type OmitKey,
 } from '../../../../util'
 import type * as AppSokaaActorDefs from '../actor/defs.js'
+import type * as AppSokaaFeedPost from './post.js'
 import type * as AppSokaaEmbedVideo from '../embed/video.js'
 import type * as AppSokaaEmbedImages from '../embed/images.js'
 
@@ -23,8 +24,7 @@ export interface PostView {
   uri: string
   cid: string
   author: AppSokaaActorDefs.ProfileViewBasic
-  /** The raw app.sokaa.feed.post record. */
-  record: { [_ in string]: unknown }
+  record: AppSokaaFeedPost.Main
   embed?:
     | $Typed<AppSokaaEmbedVideo.View>
     | $Typed<AppSokaaEmbedImages.View>

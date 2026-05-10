@@ -16,7 +16,7 @@ const id = 'app.sokaa.embed.video'
 
 export interface Main {
   $type?: 'app.sokaa.embed.video'
-  /** The mp4 video file. Maximum 100MB. */
+  /** The video file. Maximum 500MB (supports up to 4K resolution). */
   video: BlobRef
   /** A still image preview frame for the video. */
   thumbnail?: BlobRef

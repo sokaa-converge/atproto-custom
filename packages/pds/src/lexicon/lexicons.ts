@@ -9832,7 +9832,7 @@ export const schemaDict = {
               ref: 'lex:app.sokaa.embed.images#image',
             },
             minLength: 1,
-            maxLength: 4,
+            maxLength: 8,
           },
         },
       },
@@ -9868,7 +9868,7 @@ export const schemaDict = {
               ref: 'lex:app.sokaa.embed.images#viewImage',
             },
             minLength: 1,
-            maxLength: 4,
+            maxLength: 8,
           },
         },
       },
@@ -9908,9 +9908,10 @@ export const schemaDict = {
         properties: {
           video: {
             type: 'blob',
-            description: 'The mp4 video file. Maximum 100MB.',
+            description:
+              'The video file. Maximum 500MB (supports up to 4K resolution).',
             accept: ['video/mp4'],
-            maxSize: 100000000,
+            maxSize: 500000000,
           },
           thumbnail: {
             type: 'blob',
@@ -10009,7 +10010,8 @@ export const schemaDict = {
             ref: 'lex:app.sokaa.actor.defs#profileViewBasic',
           },
           record: {
-            type: 'unknown',
+            type: 'ref',
+            ref: 'lex:app.sokaa.feed.post',
             description: 'The raw app.sokaa.feed.post record.',
           },
           embed: {
@@ -10081,7 +10083,7 @@ export const schemaDict = {
               type: 'integer',
               minimum: 1,
               maximum: 100,
-              default: 50,
+              default: 20,
             },
             cursor: {
               type: 'string',
@@ -10126,7 +10128,7 @@ export const schemaDict = {
               description: 'Maximum number of posts to return.',
               minimum: 1,
               maximum: 100,
-              default: 50,
+              default: 30,
             },
             cursor: {
               type: 'string',
