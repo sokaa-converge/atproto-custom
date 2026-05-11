@@ -12,9 +12,14 @@ export function readAllLexicons(paths: string[]): LexiconDoc[] {
   const expanded: string[] = []
   for (const p of paths) {
     if (p.includes('*')) {
-      // Walk the non-glob prefix directory and collect all .json files
       const baseDir = p.substring(0, p.indexOf('*')).replace(/[\\/]+$/, '')
-      collectJsonFiles(baseDir, expanded)
+      // Derive the exact depth from the glob portion so behaviour matches the
+      // shell expansion on Linux/Mac. e.g. '*/*' → depth 2, meaning only files
+      // exactly two levels below baseDir are collected (same as bash `*/*`).
+      const globPart = p.substring(p.indexOf('*'))
+      // path.resolve() converts '/' to '\' on Windows, so split on both
+      const depth = globPart.split(/[/\\]/).length
+      collectJsonFiles(baseDir, expanded, depth)
     } else {
       expanded.push(p)
     }
@@ -163,17 +168,22 @@ function dedup(arr: string[]): string[] {
   return Array.from(new Set(arr))
 }
 
-// Recursively collects all .json files under dir. Note: this is intentionally
-// depth-unbounded — unlike a literal shell glob (e.g. */*), it will also find
-// files nested deeper than the pattern implies. That's fine for lexicon trees
-// where the convention is at most two levels deep.
-function collectJsonFiles(dir: string, acc: string[]): void {
+// Collects .json files under dir up to the given depth (1 = immediate children,
+// 2 = one level of subdirectories, etc.), matching the behaviour of a shell
+// glob where each '*' segment corresponds to one depth level. This makes
+// Windows and Linux codegen produce identical file lists.
+function collectJsonFiles(
+  dir: string,
+  acc: string[],
+  depth: number,
+  current = 1,
+): void {
   if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) return
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = join(dir, entry.name)
-    if (entry.isDirectory()) {
-      collectJsonFiles(full, acc)
-    } else if (entry.name.endsWith('.json')) {
+    if (entry.isDirectory() && current < depth) {
+      collectJsonFiles(full, acc, depth, current + 1)
+    } else if (!entry.isDirectory() && entry.name.endsWith('.json') && current === depth) {
       acc.push(full)
     }
   }
