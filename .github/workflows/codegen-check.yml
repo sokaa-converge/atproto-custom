@@ -42,12 +42,17 @@ jobs:
           pnpm --filter @atproto/lex-cli build
 
       - name: Run PDS codegen
+        working-directory: packages/pds
         run: |
-          # ubuntu-22.04 runners ship /usr/bin/lex (from flex). Prepend the
-          # pnpm-managed bin directory so @atproto/lex-cli's 'lex' wrapper is
-          # found before the system one.
-          export PATH="${GITHUB_WORKSPACE}/packages/pds/node_modules/.bin:${PATH}"
-          pnpm --filter @atproto/pds codegen
+          # Call node directly on the lex-cli dist to avoid the 'lex' binary
+          # name colliding with /usr/bin/lex (flex) pre-installed on ubuntu runners.
+          node ../lex-cli/dist/index.js gen-server --yes \
+            ./src/lexicon \
+            ../../lexicons/com/atproto/*/* \
+            ../../lexicons/app/bsky/*/* \
+            ../../lexicons/chat/bsky/*/* \
+            ../../lexicons/tools/ozone/*/* \
+            ../../lexicons/app/sokaa/*/*
 
       - name: Fail if generated files are stale
         run: |
