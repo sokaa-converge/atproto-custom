@@ -29,11 +29,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build lex-cli and its workspace dependencies
-        # In a fresh CI checkout no dist/ directories exist. The ...pkg syntax
-        # tells pnpm to build pkg AND all of its workspace dependencies in
-        # topological order: @atproto/common-web → syntax → lexicon → lex-cli.
-        run: pnpm --filter "...@atproto/lex-cli" build
+      - name: Build lex-cli workspace dependency chain
+        # In a fresh CI checkout no dist/ directories exist. Build the full
+        # upstream chain that lex-cli needs in topological order so TypeScript
+        # can resolve each package's type declarations before the next builds.
+        run: |
+          pnpm --filter @atproto/lex-data build
+          pnpm --filter @atproto/syntax build
+          pnpm --filter @atproto/lex-json build
+          pnpm --filter @atproto/common-web build
+          pnpm --filter @atproto/lexicon build
+          pnpm --filter @atproto/lex-cli build
 
       - name: Run PDS codegen
         run: pnpm --filter @atproto/pds codegen
