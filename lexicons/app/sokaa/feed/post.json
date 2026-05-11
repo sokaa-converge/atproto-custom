@@ -19,10 +19,7 @@
           "media": {
             "type": "union",
             "description": "The primary media content of the post. Must be a video or one or more images.",
-            "refs": [
-              "app.sokaa.embed.video",
-              "app.sokaa.embed.images"
-            ]
+            "refs": ["app.sokaa.embed.video", "app.sokaa.embed.images"]
           },
           "tags": {
             "type": "array",

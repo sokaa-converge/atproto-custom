@@ -30,7 +30,10 @@
             "cursor": { "type": "string" },
             "feed": {
               "type": "array",
-              "items": { "type": "ref", "ref": "app.sokaa.feed.defs#feedViewPost" }
+              "items": {
+                "type": "ref",
+                "ref": "app.sokaa.feed.defs#feedViewPost"
+              }
             }
           }
         }

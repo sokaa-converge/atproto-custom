@@ -21,10 +21,7 @@
         "embed": {
           "type": "union",
           "description": "Hydrated media embed (CDN URLs resolved).",
-          "refs": [
-            "app.sokaa.embed.video#view",
-            "app.sokaa.embed.images#view"
-          ]
+          "refs": ["app.sokaa.embed.video#view", "app.sokaa.embed.images#view"]
         },
         "likeCount": { "type": "integer", "minimum": 0 },
         "viewer": {

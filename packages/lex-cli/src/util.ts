@@ -183,7 +183,11 @@ function collectJsonFiles(
     const full = join(dir, entry.name)
     if (entry.isDirectory() && current < depth) {
       collectJsonFiles(full, acc, depth, current + 1)
-    } else if (!entry.isDirectory() && entry.name.endsWith('.json') && current === depth) {
+    } else if (
+      !entry.isDirectory() &&
+      entry.name.endsWith('.json') &&
+      current === depth
+    ) {
       acc.push(full)
     }
   }
