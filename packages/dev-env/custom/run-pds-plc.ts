@@ -2,7 +2,7 @@
 import '../src/env'
 import fs from 'node:fs/promises'
 import { TestNetworkNoAppView } from '@atproto/dev-env'
-import { readEnv, type ServerEnvironment } from '@atproto/pds'
+import { type ServerEnvironment, readEnv } from '@atproto/pds'
 
 /** Merge `readEnv()` into TestPds options; omit undefined so dev-env defaults still apply. */
 function pdsEnvFromProcess(): Partial<ServerEnvironment> {
