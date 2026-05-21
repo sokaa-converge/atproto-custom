@@ -24,5 +24,6 @@ module.exports = {
     '<rootDir>/tests/proxied/',
     '<rootDir>/tests/oauth.test.ts',
     '<rootDir>/tests/account-migration.test.ts',
+    '<rootDir>/tests/preferences.test.ts',
   ],
 }
