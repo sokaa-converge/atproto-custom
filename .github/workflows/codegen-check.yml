@@ -4,9 +4,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - 'lexicons/**'
-      - 'packages/lex-cli/src/**'
 
 jobs:
   codegen-check:
