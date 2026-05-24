@@ -12,5 +12,8 @@ module.exports = {
   // has a missing `await network.processAll()` before the first getPostThread
   // call (line 571) — the AppView hasn't indexed the listblock yet, causing
   // "Post not found". Filed for upstream contribution to bluesky-social/atproto.
-  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/tests/views/thread.test.ts'],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '<rootDir>/tests/views/thread.test.ts',
+  ],
 }
