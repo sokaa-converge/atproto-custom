@@ -122,7 +122,7 @@ async function main() {
     `💾 PDS blobs:      ${
       process.env.PDS_BLOBSTORE_S3_BUCKET
         ? `S3/R2 bucket=${process.env.PDS_BLOBSTORE_S3_BUCKET} endpoint=${process.env.PDS_BLOBSTORE_S3_ENDPOINT ?? 'AWS'}`
-        : (process.env.PDS_BLOB_STORE_LOCATION ?? 'tmpdir (ephemeral)')
+        : process.env.PDS_BLOB_STORE_LOCATION ?? 'tmpdir (ephemeral)'
     }`,
   )
   console.log('💡 Point Sokaa / AtpAgent service URL at:', pdsPublicUrl)
