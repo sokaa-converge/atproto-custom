@@ -57,6 +57,10 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Redeploy on Railway
+        # Railway auto-deploy watches the GHCR image tag, so this step is a
+        # best-effort nudge. continue-on-error prevents the whole workflow from
+        # failing if the CLI can't find a linked service in CI context.
+        continue-on-error: true
         run: |
           npm install -g @railway/cli
           railway redeploy --yes
