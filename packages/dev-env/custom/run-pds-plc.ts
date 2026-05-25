@@ -7,6 +7,13 @@ import { type ServerEnvironment, readEnv } from '@atproto/pds'
 /** Merge `readEnv()` into TestPds options; omit undefined so dev-env defaults still apply. */
 function pdsEnvFromProcess(): Partial<ServerEnvironment> {
   const raw = readEnv()
+
+  // If S3/R2 is configured, exclude disk blobstore settings to avoid conflicts
+  if (raw.blobstoreS3Bucket) {
+    delete raw.blobstoreDiskLocation
+    delete raw.blobstoreDiskTmpLocation
+  }
+
   const out = Object.fromEntries(
     Object.entries(raw).filter(([, v]) => v !== undefined),
   ) as Partial<ServerEnvironment>
