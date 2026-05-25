@@ -9,12 +9,22 @@ const path = require('path')
 const fs = require('fs')
 
 const PRETTIER_EXTENSIONS = new Set([
-  '.ts', '.tsx', '.js', '.jsx', '.json', '.md', '.yaml', '.yml', '.css',
+  '.ts',
+  '.tsx',
+  '.js',
+  '.jsx',
+  '.json',
+  '.md',
+  '.yaml',
+  '.yml',
+  '.css',
 ])
 
 let input = ''
 process.stdin.setEncoding('utf8')
-process.stdin.on('data', (chunk) => { input += chunk })
+process.stdin.on('data', (chunk) => {
+  input += chunk
+})
 process.stdin.on('end', () => {
   try {
     const event = JSON.parse(input)
