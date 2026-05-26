@@ -186,6 +186,27 @@ describe('PDS + PLC integration', () => {
     expect(blob.size).toBe(payload.byteLength)
 
     blobCid = blob.ref.$link
+
+    // Blobs live in temporary storage until referenced by a committed record.
+    // com.atproto.sync.getBlob only serves committed blobs, so we must create
+    // a record that contains the blob ref before the get_blob test can succeed.
+    await xrpcPost(
+      'com.atproto.repo.createRecord',
+      {
+        repo: did,
+        collection: 'app.sokaa.test.blob',
+        record: {
+          $type: 'app.sokaa.test.blob',
+          blob: {
+            $type: 'blob',
+            ref: { $link: blobCid },
+            mimeType: 'application/octet-stream',
+            size: payload.byteLength,
+          },
+        },
+      },
+      jwt,
+    )
   })
 
   // ─── get_blob ────────────────────────────────────────────────────────────────
