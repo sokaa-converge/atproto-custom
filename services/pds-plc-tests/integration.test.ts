@@ -58,7 +58,9 @@ async function uploadBlob(blob: Buffer, jwt: string): Promise<JsonBody> {
 }
 
 async function getBlob(did: string, cid: string): Promise<Buffer> {
-  const res = await fetch(`${PDS_URL}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${cid}`)
+  const res = await fetch(
+    `${PDS_URL}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${cid}`,
+  )
   if (!res.ok) {
     const text = await res.text()
     throw new Error(`getBlob failed ${res.status}: ${text}`)
