@@ -42,6 +42,11 @@ jobs:
             --name pds-plc \
             -p 3000:3000 \
             -p 3001:3001 \
+            -e PDS_BLOBSTORE_S3_BUCKET="${{ secrets.CI_R2_BUCKET }}" \
+            -e PDS_BLOBSTORE_S3_ENDPOINT="${{ secrets.CI_R2_ENDPOINT }}" \
+            -e PDS_BLOBSTORE_S3_REGION="${{ secrets.CI_R2_REGION }}" \
+            -e PDS_BLOBSTORE_S3_ACCESS_KEY_ID="${{ secrets.CI_R2_ACCESS_KEY_ID }}" \
+            -e PDS_BLOBSTORE_S3_SECRET_ACCESS_KEY="${{ secrets.CI_R2_SECRET_ACCESS_KEY }}" \
             pds-plc-dev:ci
 
       - name: Wait for PDS to be healthy
@@ -58,6 +63,9 @@ jobs:
           echo "PDS did not become healthy within 60s"
           docker logs pds-plc
           exit 1
+
+      - name: Show active blobstore
+        run: docker logs pds-plc 2>&1 | grep "PDS blobs:" || true
 
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
