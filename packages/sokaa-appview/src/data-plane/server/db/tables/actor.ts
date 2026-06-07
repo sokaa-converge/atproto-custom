@@ -1,6 +1,6 @@
-export const tableName = 'actor'
-
 import { Generated } from 'kysely'
+
+export const tableName = 'actor'
 
 export interface Actor {
   did: string
@@ -10,6 +10,7 @@ export interface Actor {
   description: string | null
   avatarCid: string | null
   bannerCid: string | null
+  // Generated<> = Postgres DEFAULT on insert; reads still return plain number/string.
   followersCount: Generated<number>
   postsCount: Generated<number>
   upstreamStatus: Generated<string>
