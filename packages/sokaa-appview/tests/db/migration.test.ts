@@ -1,15 +1,11 @@
-import fs from 'node:fs'
-import path from 'node:path'
 import { sql } from 'kysely'
+import { Database, DatabaseSchema } from '../../src/data-plane/server/db'
 
 /**
- * Phase 1 schema contract for the Sokaa AppView dataplane database.
+ * Schema contract for the Sokaa AppView dataplane database.
  *
- * This is the TESTS-first PR: it defines exactly what the migrations must
- * produce before any migration code exists. To avoid breaking the monorepo's
- * recursive CI (every package's `test` runs in a shared shard), the suite stays
- * inert until the db module lands in the code PR — at which point it activates
- * automatically and must pass.
+ * Runs in CI on every PR via the monorepo Test job (with-test-db.sh → Docker
+ * Postgres). Any migration or schema change must keep these assertions green.
  *
  * Conventions mirror packages/bsky (not the raw SQL in docs/):
  *  - singular table names (`actor`, `post`, `follow`, `like`)
@@ -19,13 +15,6 @@ import { sql } from 'kysely'
  *    matching bsky and PDF §8.3.
  *  - no FK constraints between records (firehose events arrive out of order).
  */
-
-const dbModulePath = path.resolve(
-  __dirname,
-  '../../src/data-plane/server/db/db.ts',
-)
-const dbImplemented = fs.existsSync(dbModulePath)
-const describeMigrations = dbImplemented ? describe : describe.skip
 
 // Expected columns and their information_schema data_type per table.
 const EXPECTED_COLUMNS: Record<string, Record<string, string>> = {
@@ -82,21 +71,15 @@ const EXPECTED_INDEX_COLUMNS: Record<string, string[]> = {
   like: ['subject'],
 }
 
-describeMigrations('sokaa-appview db migrations', () => {
+describe('sokaa-appview db migrations', () => {
   const schema = 'sokaa_appview_migration_test'
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let database: any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let db: any
+  let database: Database
+  let db: DatabaseSchema
 
   beforeAll(async () => {
     const url = process.env.DB_POSTGRES_URL
     if (!url) throw new Error('Missing DB_POSTGRES_URL for migration tests')
-    // Path built at runtime so eslint does not require the module before the code PR.
-    const dbMod = await import(
-      ['..', '..', 'src', 'data-plane', 'server', 'db'].join('/')
-    )
-    database = new dbMod.Database({ url, schema, poolSize: 5 })
+    database = new Database({ url, schema, poolSize: 5 })
     db = database.db
     await db.schema.dropSchema(schema).ifExists().cascade().execute()
     await database.migrateToLatestOrThrow()
@@ -104,7 +87,7 @@ describeMigrations('sokaa-appview db migrations', () => {
 
   afterAll(async () => {
     if (database) {
-      await db.schema.dropSchema(schema).ifExists().cascade().execute()
+      await database.db.schema.dropSchema(schema).ifExists().cascade().execute()
       await database.close()
     }
   })

@@ -1,5 +1,10 @@
 import { Kysely, sql } from 'kysely'
 
+// Initial schema bootstrap. Filename follows the bsky/Kysely convention:
+//   {UTC-timestamp}-{short-name}.ts
+// Migrations run in alphabetical order, so the timestamp controls ordering.
+// Future migrations get their own timestamped files (e.g. via migration:create).
+
 export async function up(db: Kysely<unknown>): Promise<void> {
   await db.schema
     .createTable('actor')
