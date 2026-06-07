@@ -1,5 +1,7 @@
 export const tableName = 'actor'
 
+import { Generated } from 'kysely'
+
 export interface Actor {
   did: string
   handle: string | null
@@ -8,9 +10,9 @@ export interface Actor {
   description: string | null
   avatarCid: string | null
   bannerCid: string | null
-  followersCount: number
-  postsCount: number
-  upstreamStatus: string
+  followersCount: Generated<number>
+  postsCount: Generated<number>
+  upstreamStatus: Generated<string>
   indexedAt: string
 }
 

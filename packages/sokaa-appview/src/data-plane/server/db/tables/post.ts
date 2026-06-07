@@ -1,5 +1,7 @@
 export const tableName = 'post'
 
+import { Generated } from 'kysely'
+
 export interface Post {
   uri: string
   cid: string
@@ -7,7 +9,7 @@ export interface Post {
   caption: string | null
   mediaType: string | null
   mediaJson: unknown | null
-  likeCount: number
+  likeCount: Generated<number>
   createdAt: string
   indexedAt: string
 }
