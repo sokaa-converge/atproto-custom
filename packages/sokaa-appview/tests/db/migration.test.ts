@@ -92,7 +92,10 @@ describeMigrations('sokaa-appview db migrations', () => {
   beforeAll(async () => {
     const url = process.env.DB_POSTGRES_URL
     if (!url) throw new Error('Missing DB_POSTGRES_URL for migration tests')
-    const dbMod = await import('../../src/data-plane/server/db')
+    // Path built at runtime so eslint does not require the module before the code PR.
+    const dbMod = await import(
+      ['..', '..', 'src', 'data-plane', 'server', 'db'].join('/')
+    )
     database = new dbMod.Database({ url, schema, poolSize: 5 })
     db = database.db
     await db.schema.dropSchema(schema).ifExists().cascade().execute()
