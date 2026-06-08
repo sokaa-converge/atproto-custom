@@ -136,6 +136,10 @@ export class IndexingService {
 
   async unindexActor(did: string) {
     this.db.assertNotTransaction()
+    await this.db.db
+      .deleteFrom('like')
+      .where('subject', 'like', `at://${did}/%`)
+      .execute()
     await this.db.db.deleteFrom('post').where('creator', '=', did).execute()
     await this.db.db.deleteFrom('follow').where('creator', '=', did).execute()
     await this.db.db

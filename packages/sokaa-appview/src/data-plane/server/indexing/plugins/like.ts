@@ -34,20 +34,6 @@ const insertFn = async (
   return inserted || null
 }
 
-const findDuplicate = async (
-  db: DatabaseSchema,
-  uri: AtUri,
-  obj: AppSokaaFeedLike.Record,
-): Promise<AtUri | null> => {
-  const found = await db
-    .selectFrom('like')
-    .where('creator', '=', uri.host)
-    .where('subject', '=', obj.subject.uri)
-    .selectAll()
-    .executeTakeFirst()
-  return found ? new AtUri(found.uri) : null
-}
-
 const deleteFn = async (
   db: DatabaseSchema,
   uri: AtUri,
@@ -82,7 +68,6 @@ export const makePlugin = (db: Database): PluginType => {
       AppSokaaFeedLike.validateRecord(obj)
     },
     insertFn,
-    findDuplicate,
     deleteFn,
     updateAggregates,
   })

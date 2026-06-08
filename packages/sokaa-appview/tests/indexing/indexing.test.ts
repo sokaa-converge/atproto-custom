@@ -10,6 +10,7 @@ import {
 
 const alice = 'did:plc:alice'
 const bob = 'did:plc:bob'
+const carol = 'did:plc:carol'
 const ts = '2026-01-01T00:00:00.000Z'
 const blobCid = CID.parse(
   'bafyreief577qr2nxcsmx5gi536ftridv6p7zfkd4w2oacyl5xvzqzp36fy',
@@ -147,7 +148,7 @@ describe('indexing', () => {
 
   it('deletes a post and updates postsCount', async () => {
     const { uri } = await indexCreate(svc, {
-      did: bob,
+      did: carol,
       collection: ids.AppSokaaFeedPost,
       rkey: '3jzfcijpj2z2e',
       timestamp: ts,
@@ -171,7 +172,7 @@ describe('indexing', () => {
 
     const actor = await database.db
       .selectFrom('actor')
-      .where('did', '=', bob)
+      .where('did', '=', carol)
       .selectAll()
       .executeTakeFirst()
     expect(actor?.postsCount).toBe(0)

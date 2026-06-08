@@ -13,11 +13,6 @@ type RecordProcessorParams<T, S> = {
     obj: T,
     timestamp: string,
   ) => Promise<S | null>
-  findDuplicate: (
-    db: DatabaseSchema,
-    uri: AtUri,
-    obj: T,
-  ) => Promise<AtUri | null>
   deleteFn: (db: DatabaseSchema, uri: AtUri) => Promise<S | null>
   updateAggregates?: (db: DatabaseSchema, obj: S) => Promise<void>
 }
@@ -27,10 +22,10 @@ export class RecordProcessor<T, S> {
   db: DatabaseSchema
 
   constructor(
-    private appDb: Database,
+    db: Database,
     private params: RecordProcessorParams<T, S>,
   ) {
-    this.db = appDb.db
+    this.db = db.db
     this.collection = this.params.lexId
   }
 

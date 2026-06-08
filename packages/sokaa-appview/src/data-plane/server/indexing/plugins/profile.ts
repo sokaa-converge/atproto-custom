@@ -43,10 +43,6 @@ const insertFn = async (
   return { did }
 }
 
-const findDuplicate = async (): Promise<AtUri | null> => {
-  return null
-}
-
 const deleteFn = async (
   db: DatabaseSchema,
   uri: AtUri,
@@ -77,7 +73,6 @@ export const makePlugin = (db: Database): PluginType => {
       AppSokaaActorProfile.validateRecord(obj)
     },
     insertFn,
-    findDuplicate,
     deleteFn,
   })
 }

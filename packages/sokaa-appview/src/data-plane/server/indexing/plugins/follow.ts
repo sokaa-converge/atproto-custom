@@ -33,20 +33,6 @@ const insertFn = async (
   return inserted || null
 }
 
-const findDuplicate = async (
-  db: DatabaseSchema,
-  uri: AtUri,
-  obj: AppSokaaGraphFollow.Record,
-): Promise<AtUri | null> => {
-  const found = await db
-    .selectFrom('follow')
-    .where('creator', '=', uri.host)
-    .where('subjectDid', '=', obj.subject)
-    .selectAll()
-    .executeTakeFirst()
-  return found ? new AtUri(found.uri) : null
-}
-
 const deleteFn = async (
   db: DatabaseSchema,
   uri: AtUri,
@@ -90,7 +76,6 @@ export const makePlugin = (db: Database): PluginType => {
       AppSokaaGraphFollow.validateRecord(obj)
     },
     insertFn,
-    findDuplicate,
     deleteFn,
     updateAggregates,
   })
