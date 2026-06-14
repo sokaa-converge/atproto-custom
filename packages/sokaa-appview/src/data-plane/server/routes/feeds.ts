@@ -9,7 +9,8 @@ import {
 
 export default (db: Database): Partial<ServiceImpl<typeof Service>> => ({
   async getTimeline(req) {
-    const { actorDid, limit = 50, cursor } = req
+    const { actorDid, cursor } = req
+    const limit = req.limit > 0 ? req.limit : 50
     const { ref } = db.db.dynamic
     const keyset = new CreatedAtCidKeyset(
       ref('post.createdAt'),
@@ -35,6 +36,7 @@ export default (db: Database): Partial<ServiceImpl<typeof Service>> => ({
       .selectAll('post')
 
     selfQb = paginate(selfQb, {
+      // bsky pattern: bound self-branch cost per page
       limit: Math.min(limit, 10),
       cursor,
       keyset,
@@ -55,7 +57,8 @@ export default (db: Database): Partial<ServiceImpl<typeof Service>> => ({
   },
 
   async getAuthorFeed(req) {
-    const { actorDid, limit = 50, cursor } = req
+    const { actorDid, cursor } = req
+    const limit = req.limit > 0 ? req.limit : 50
     const { ref } = db.db.dynamic
     const keyset = new CreatedAtCidKeyset(
       ref('post.createdAt'),

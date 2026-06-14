@@ -26,6 +26,7 @@ export class DataPlaneServer {
   }
 
   async destroy() {
+    this.server.closeAllConnections?.()
     return new Promise<void>((resolve, reject) => {
       this.server.close((err) => {
         if (err) reject(err)
