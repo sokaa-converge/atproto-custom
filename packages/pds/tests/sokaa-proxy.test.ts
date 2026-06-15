@@ -25,7 +25,7 @@ class SokaaAppViewMock {
     const requests: CapturedReq[] = []
     const app = express()
 
-    app.use('/xrpc', (req, res) => {
+    app.get('*', (req, res) => {
       requests.push({
         url: req.url,
         auth: req.headers.authorization,
@@ -81,13 +81,16 @@ describe('sokaa appview proxy routing', () => {
   })
 
   it('routes app.sokaa.* to sokaa_appview via computeProxyTo', () => {
-    const req = { header: () => undefined } as express.Request
-    expect(
-      computeProxyTo(network.pds.ctx, req, ids.AppSokaaFeedGetTimeline),
-    ).toBe(`${appview.did}#sokaa_appview`)
-    expect(
-      computeProxyTo(network.pds.ctx, req, ids.AppBskyFeedGetTimeline),
-    ).toBe(`${network.pds.ctx.cfg.bskyAppView?.did}#bsky_appview`)
+    const req = { header: () => undefined } as unknown as express.Request
+    const ctx = network.pds.ctx as unknown as Parameters<
+      typeof computeProxyTo
+    >[0]
+    expect(computeProxyTo(ctx, req, ids.AppSokaaFeedGetTimeline)).toBe(
+      `${appview.did}#sokaa_appview`,
+    )
+    expect(computeProxyTo(ctx, req, ids.AppBskyFeedGetTimeline)).toBe(
+      `${network.pds.ctx.cfg.bskyAppView?.did}#bsky_appview`,
+    )
   })
 
   it('proxies app.sokaa.feed.getTimeline with service JWT', async () => {
@@ -150,7 +153,10 @@ describe('sokaa appview proxy routing', () => {
 
   it('parseProxyHeader uses configured sokaa appview url', async () => {
     await expect(
-      parseProxyHeader(network.pds.ctx, `${appview.did}#sokaa_appview`),
+      parseProxyHeader(
+        network.pds.ctx as unknown as Parameters<typeof parseProxyHeader>[0],
+        `${appview.did}#sokaa_appview`,
+      ),
     ).resolves.toEqual({ did: appview.did, url: appview.url })
   })
 
@@ -160,23 +166,10 @@ describe('sokaa appview proxy routing', () => {
     await agent.com.atproto.repo.createRecord(
       {
         repo: alice,
-        collection: ids.AppSokaaFeedPost,
+        collection: ids.AppSokaaGraphFollow,
         record: {
-          $type: ids.AppSokaaFeedPost,
-          caption: 'hello',
-          media: {
-            $type: ids.AppSokaaEmbedVideo,
-            video: {
-              $type: 'blob',
-              ref: {
-                $link:
-                  'bafyreief577qr2nxcsmx5gi536ftridv6p7zfkd4w2oacyl5xvzqzp36fy',
-              },
-              mimeType: 'video/mp4',
-              size: 1,
-            },
-            duration: 1,
-          },
+          $type: ids.AppSokaaGraphFollow,
+          subject: sc.dids.bob,
           createdAt: new Date().toISOString(),
         },
       },
