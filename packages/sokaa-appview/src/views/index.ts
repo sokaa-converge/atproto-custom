@@ -120,7 +120,7 @@ export class Views {
 
   private embedView(
     indexed: Post,
-    state: HydrationState,
+    _state: HydrationState,
   ): AppSokaaEmbedVideo.View | AppSokaaEmbedImages.View | undefined {
     const media = indexed.mediaJson
     if (!media || typeof media !== 'object') return

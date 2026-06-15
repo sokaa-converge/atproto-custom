@@ -1,12 +1,12 @@
-import { ids } from '../../src/data-plane/server/indexing/collections'
-import { Hydrator } from '../../src/hydration/hydrator'
-import { Views } from '../../src/views'
-import { CdnUriBuilder } from '../../src/views/uri'
 import {
   hydration,
   presentation,
   skeleton,
 } from '../../src/api/app/sokaa/feed/getTimeline'
+import { ids } from '../../src/data-plane/server/indexing/collections'
+import { Hydrator } from '../../src/hydration/hydrator'
+import { Views } from '../../src/views'
+import { CdnUriBuilder } from '../../src/views/uri'
 import {
   createRouteHandlers,
   createTestDb,

@@ -1,4 +1,9 @@
+import crypto, { KeyObject } from 'node:crypto'
 import express from 'express'
+import KeyEncoder from 'key-encoder'
+import * as ui8 from 'uint8arrays'
+import { SECP256K1_JWT_ALG, parseDidKey } from '@atproto/crypto'
+import { IdResolver } from '@atproto/identity'
 import {
   AuthRequiredError,
   VerifySignatureWithKeyFn,
@@ -6,11 +11,6 @@ import {
   parseReqNsid,
   verifyJwt as verifyServiceJwt,
 } from '@atproto/xrpc-server'
-import * as ui8 from 'uint8arrays'
-import { SECP256K1_JWT_ALG, parseDidKey } from '@atproto/crypto'
-import crypto, { KeyObject } from 'node:crypto'
-import KeyEncoder from 'key-encoder'
-import { IdResolver } from '@atproto/identity'
 
 type ReqCtx = {
   req: express.Request

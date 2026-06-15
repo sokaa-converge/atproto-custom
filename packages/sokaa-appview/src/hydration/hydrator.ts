@@ -5,9 +5,9 @@ import { Actor, Actors, ProfileViewerState, ProfileViewerStates } from './actor'
 import {
   FeedItem,
   Post,
-  Posts,
   PostViewerState,
   PostViewerStates,
+  Posts,
 } from './feed'
 import { HydrateCtx, HydrationMap, HydrationState, mergeStates } from './util'
 
