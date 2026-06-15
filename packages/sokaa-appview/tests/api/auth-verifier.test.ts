@@ -39,7 +39,8 @@ describe('AuthVerifier', () => {
     })
     const req = {
       method: 'GET',
-      path: `/xrpc/${opts.lxm}`,
+      originalUrl: `/xrpc/${opts.lxm}`,
+      url: `/xrpc/${opts.lxm}`,
       headers: {
         authorization: `Bearer ${token}`,
       },
@@ -92,7 +93,8 @@ describe('AuthVerifier', () => {
     })
     const req = {
       method: 'GET',
-      path: '/xrpc/app.sokaa.feed.getTimeline',
+      originalUrl: '/xrpc/app.sokaa.feed.getTimeline',
+      url: '/xrpc/app.sokaa.feed.getTimeline',
       headers: {
         authorization: `Bearer ${token}`,
       },
