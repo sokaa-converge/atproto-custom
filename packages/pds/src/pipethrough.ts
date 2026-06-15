@@ -553,6 +553,8 @@ export const PROTECTED_METHODS = new Set<string>([
   ids.ComAtprotoServerUpdateEmail,
 ])
 
+const SOKAA_LEXICON_PREFIX = 'app.sokaa.'
+
 const defaultService = (
   ctx: AppContext,
   nsid: string,
@@ -598,6 +600,12 @@ const defaultService = (
         serviceInfo: ctx.cfg.reportService,
       }
     default:
+      if (nsid.startsWith(SOKAA_LEXICON_PREFIX)) {
+        return {
+          serviceId: 'sokaa_appview',
+          serviceInfo: ctx.cfg.sokaaAppView,
+        }
+      }
       return {
         serviceId: 'bsky_appview',
         serviceInfo: ctx.cfg.bskyAppView,
