@@ -269,6 +269,13 @@ export const parseProxyHeader = async (
     return { did, url: ctx.cfg.bskyAppView.url }
   }
 
+  if (
+    ctx.cfg.sokaaAppView &&
+    proxyTo === `${ctx.cfg.sokaaAppView.did}#sokaa_appview`
+  ) {
+    return { did, url: ctx.cfg.sokaaAppView.url }
+  }
+
   const didDoc = await ctx.idResolver.did.resolve(did)
   if (!didDoc) {
     throw new InvalidRequestError('could not resolve proxy did')

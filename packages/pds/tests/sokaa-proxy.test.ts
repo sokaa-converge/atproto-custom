@@ -5,8 +5,8 @@ import { AddressInfo } from 'node:net'
 import express from 'express'
 import { SeedClient, TestNetworkNoAppView, usersSeed } from '@atproto/dev-env'
 import { verifyJwt } from '@atproto/xrpc-server'
-import { ids } from '../../src/lexicon/lexicons'
-import { computeProxyTo } from '../../src/pipethrough'
+import { ids } from '../src/lexicon/lexicons'
+import { computeProxyTo, parseProxyHeader } from '../src/pipethrough'
 
 type CapturedReq = {
   url: string
@@ -113,6 +113,47 @@ describe('sokaa appview proxy routing', () => {
     expect(verified.lxm).toBe(ids.AppSokaaFeedGetTimeline)
   })
 
+  it('proxies app.sokaa.actor.getProfile with service JWT', async () => {
+    const path = `/xrpc/app.sokaa.actor.getProfile?actor=${alice}`
+    const res = await fetch(`${network.pds.url}${path}`, {
+      headers: sc.getHeaders(alice),
+    })
+    expect(res.status).toBe(200)
+
+    const req = appview.requests.at(-1)
+    assert(req)
+    expect(req.url).toBe(path)
+    assert(req.auth)
+
+    const verified = await verifyJwt(
+      req.auth.replace('Bearer ', ''),
+      appview.did,
+      ids.AppSokaaActorGetProfile,
+      (iss) => network.pds.ctx.idResolver.did.resolveAtprotoKey(iss, true),
+    )
+    expect(verified.aud).toBe(appview.did)
+    expect(verified.iss).toBe(alice)
+    expect(verified.lxm).toBe(ids.AppSokaaActorGetProfile)
+  })
+
+  it('proxies via atproto-proxy header using configured sokaa appview url', async () => {
+    const path = `/xrpc/app.sokaa.feed.getTimeline?limit=5`
+    const res = await fetch(`${network.pds.url}${path}`, {
+      headers: {
+        ...sc.getHeaders(alice),
+        'atproto-proxy': `${appview.did}#sokaa_appview`,
+      },
+    })
+    expect(res.status).toBe(200)
+    expect(appview.requests.at(-1)?.url).toBe(path)
+  })
+
+  it('parseProxyHeader uses configured sokaa appview url', async () => {
+    await expect(
+      parseProxyHeader(network.pds.ctx, `${appview.did}#sokaa_appview`),
+    ).resolves.toEqual({ did: appview.did, url: appview.url })
+  })
+
   it('handles com.atproto.repo.createRecord locally without proxying', async () => {
     const before = appview.requests.length
     const agent = network.pds.getClient()
@@ -142,5 +183,36 @@ describe('sokaa appview proxy routing', () => {
       { headers: sc.getHeaders(alice) },
     )
     expect(appview.requests.length).toBe(before)
+  })
+})
+
+describe('sokaa appview proxy routing without config', () => {
+  let network: TestNetworkNoAppView
+  let sc: SeedClient
+  let alice: string
+
+  beforeAll(async () => {
+    network = await TestNetworkNoAppView.create({
+      dbPostgresSchema: 'sokaa_proxy_unconfigured',
+    })
+    sc = network.getSeedClient()
+    await usersSeed(sc)
+    alice = sc.dids.alice
+    await network.processAll()
+  })
+
+  afterAll(async () => {
+    await network?.close()
+  })
+
+  it('errors when sokaa appview is not configured', async () => {
+    const path = `/xrpc/app.sokaa.feed.getTimeline?limit=10`
+    const res = await fetch(`${network.pds.url}${path}`, {
+      headers: sc.getHeaders(alice),
+    })
+    expect(res.status).toBe(400)
+    await expect(res.json()).resolves.toMatchObject({
+      message: `No service configured for ${ids.AppSokaaFeedGetTimeline}`,
+    })
   })
 })
