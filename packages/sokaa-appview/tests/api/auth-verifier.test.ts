@@ -80,7 +80,7 @@ describe('AuthVerifier', () => {
       lxm,
     })
     await expect(authVerifier.standard({ req })).rejects.toMatchObject({
-      status: 401,
+      type: 401,
     })
   })
 
@@ -100,7 +100,7 @@ describe('AuthVerifier', () => {
       },
     } as unknown as express.Request
     await expect(authVerifier.standard({ req })).rejects.toMatchObject({
-      status: 401,
+      type: 401,
     })
   })
 
@@ -116,7 +116,7 @@ describe('AuthVerifier', () => {
         { req },
         { iss: ['did:plc:other'], aud: null },
       ),
-    ).rejects.toMatchObject({ status: 401 })
+    ).rejects.toMatchObject({ type: 401 })
   })
 
   it('retries key resolution after signature failure', async () => {
