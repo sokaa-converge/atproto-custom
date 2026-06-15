@@ -61,10 +61,6 @@ export const presentation = (input: {
   hydration: HydrationState
 }) => {
   const { ctx, params, skeleton, hydration } = input
-  const profile = ctx.views.profile(skeleton.did, hydration)
-  if (!profile) {
-    throw new InvalidRequestError('Profile not found')
-  }
   if (!params.hydrateCtx.includeTakedowns) {
     if (ctx.views.actorIsTakendown(skeleton.did, hydration)) {
       throw new InvalidRequestError(
@@ -79,6 +75,10 @@ export const presentation = (input: {
         'AccountDeactivated',
       )
     }
+  }
+  const profile = ctx.views.profile(skeleton.did, hydration)
+  if (!profile) {
+    throw new InvalidRequestError('Profile not found')
   }
   return profile
 }
