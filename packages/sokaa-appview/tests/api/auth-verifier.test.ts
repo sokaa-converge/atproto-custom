@@ -117,6 +117,38 @@ describe('AuthVerifier', () => {
     ).rejects.toMatchObject({ status: 401 })
   })
 
+  it('retries key resolution after signature failure', async () => {
+    const wrongKeypair = await Secp256k1Keypair.create()
+    const resolveAtprotoKey = jest.fn(
+      async (_did: string, forceRefresh?: boolean) => {
+        if (forceRefresh) {
+          return keypair.did()
+        }
+        return wrongKeypair.did()
+      },
+    )
+    const retryVerifier = new AuthVerifier(
+      { did: { resolveAtprotoKey } } as unknown as IdResolver,
+      {
+        ownDid,
+        alternateAudienceDids: [altDid],
+        adminPasswords: ['secret'],
+      },
+    )
+
+    const lxm = 'app.sokaa.feed.getTimeline'
+    const { req } = await reqWithJwt({
+      iss: 'did:plc:alice',
+      aud: ownDid,
+      lxm,
+    })
+    const result = await retryVerifier.standard({ req })
+    expect(result.credentials.iss).toBe('did:plc:alice')
+    expect(resolveAtprotoKey).toHaveBeenCalledTimes(2)
+    expect(resolveAtprotoKey).toHaveBeenNthCalledWith(1, 'did:plc:alice', false)
+    expect(resolveAtprotoKey).toHaveBeenNthCalledWith(2, 'did:plc:alice', true)
+  })
+
   it('parseCreds returns includeTakedowns for admin basic auth', () => {
     const creds = authVerifier.parseCreds({
       credentials: { type: 'role', admin: true },

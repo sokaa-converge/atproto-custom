@@ -153,13 +153,16 @@ export class Views {
         $type: 'app.sokaa.embed.images#view',
         images: images.images.map((image) => {
           const imageCid = cidFromBlobRef(image.image)
-          const url = imageCid
-            ? this.cdnUriBuilder.avatar(authorDid, imageCid)
+          const thumb = imageCid
+            ? this.cdnUriBuilder.feedThumbnail(authorDid, imageCid)
+            : ''
+          const fullsize = imageCid
+            ? this.cdnUriBuilder.feedFullsize(authorDid, imageCid)
             : ''
           return {
             $type: 'app.sokaa.embed.images#viewImage',
-            thumb: url,
-            fullsize: url,
+            thumb,
+            fullsize,
             alt: image.alt,
             aspectRatio: image.aspectRatio,
           }

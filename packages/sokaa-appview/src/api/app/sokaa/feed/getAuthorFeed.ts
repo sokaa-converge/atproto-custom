@@ -67,7 +67,7 @@ export const skeleton = async (inputs: {
   }
 }
 
-const hydration = async (inputs: {
+export const hydration = async (inputs: {
   ctx: Context
   params: Params
   skeleton: Skeleton
@@ -76,7 +76,7 @@ const hydration = async (inputs: {
   return ctx.hydrator.hydrateFeedItems(skeleton.items, params.hydrateCtx)
 }
 
-const presentation = (inputs: {
+export const presentation = (inputs: {
   ctx: Context
   skeleton: Skeleton
   hydration: HydrationState

@@ -45,7 +45,7 @@ export class SokaaAppView {
     this.app = opts.app
   }
 
-  static create(opts: { config: ServerConfig; db?: Database }): SokaaAppView {
+  static create(opts: { config: ServerConfig; db: Database }): SokaaAppView {
     const { config, db } = opts
     const app = express()
     app.set('trust proxy', true)

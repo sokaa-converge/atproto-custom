@@ -1,6 +1,4 @@
-/**
- * GENERATED CODE - DO NOT MODIFY
- */
+// MANUAL STUB — pending com.atproto lexicon codegen wiring
 import { type ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { validate as _validate } from '../../../../lexicons'

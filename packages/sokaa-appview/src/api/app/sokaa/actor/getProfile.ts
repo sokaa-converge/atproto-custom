@@ -33,7 +33,7 @@ export default function (server: Server, ctx: AppContext) {
   })
 }
 
-const skeleton = async (input: {
+export const skeleton = async (input: {
   ctx: Context
   params: Params
 }): Promise<SkeletonState> => {
@@ -45,7 +45,7 @@ const skeleton = async (input: {
   return { did }
 }
 
-const hydration = async (input: {
+export const hydration = async (input: {
   ctx: Context
   params: Params
   skeleton: SkeletonState
@@ -54,7 +54,7 @@ const hydration = async (input: {
   return ctx.hydrator.hydrateProfile([skeleton.did], params.hydrateCtx)
 }
 
-const presentation = (input: {
+export const presentation = (input: {
   ctx: Context
   params: Params
   skeleton: SkeletonState
