@@ -46,6 +46,15 @@ On push to the repo **default branch**, `.github/workflows/build-and-push-custom
 
 You can also run the workflow manually (**Actions → build-and-push-custom-dev-ghcr → Run workflow**).
 
+When building from a **feature branch**, `pds-plc-dev-latest` is **not** updated (main only). Pass a custom tag so Railway can pin the exact image:
+
+1. Actions → **build-and-push-custom-dev-ghcr** → Run workflow
+2. Select your branch (e.g. `fix/sokaa-appview-cdn-url`)
+3. Set **image_tag** to e.g. `pds-plc-dev-pr25-cdn`
+4. After the run completes, set Railway’s image to `ghcr.io/sokaa-converge/atproto-custom:pds-plc-dev-pr25-cdn` and redeploy manually (auto-redeploy is skipped when `image_tag` is set, because Railway must be pinned to that tag first).
+
+Every manual run still pushes `pds-plc-dev:<full-git-sha>` for the selected commit.
+
 Pull and run (set `PDS_HOSTNAME` to the hostname clients use behind your TLS terminator):
 
 ```bash
