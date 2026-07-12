@@ -1,5 +1,5 @@
-import { isValidDid } from '@atproto/syntax'
 import { CID } from 'multiformats/cid'
+import { isValidDid } from '@atproto/syntax'
 
 export interface Env {
   MEDIA: R2Bucket
