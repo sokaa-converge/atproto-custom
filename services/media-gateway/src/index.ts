@@ -20,7 +20,8 @@ export default {
       })
     }
 
-    if (request.method !== 'GET' && request.method !== 'HEAD') {
+    const isReadMethod = request.method === 'GET' || request.method === 'HEAD'
+    if (!isReadMethod) {
       return response('Method not allowed\n', 405, { Allow: ALLOWED_METHODS })
     }
 
