@@ -43,3 +43,11 @@ SOKAA_APPVIEW_CDN_URL=https://sokaa-media-gateway.sokaa-media.workers.dev
 ```
 
 AppView appends `/v1/media/:did/:cid` itself — do not include that path in the env var.
+
+## Video / HLS
+
+Raw blob delivery through this Worker is **not** an HLS processing contract.
+See the product ADR in the sokaa repo:
+[`docs/decisions/video-processing.md`](https://github.com/sokaa-converge/sokaa/blob/main/docs/decisions/video-processing.md).
+Implementation is deferred until vendor, budget, and deletion policy are
+approved.
