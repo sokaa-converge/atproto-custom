@@ -19,6 +19,7 @@ import { createServer } from './lexicon'
 import { loggerMiddleware } from './logger'
 import { Views } from './views'
 import { CdnUriBuilder } from './views/uri'
+import { createVideoRouter } from './video/routes'
 
 export const PACKAGE_NAME = '@atproto/sokaa-appview'
 export { Database } from './data-plane/server/db'
@@ -52,6 +53,7 @@ export class SokaaAppView {
     app.use(cors({ maxAge: DAY / SECOND }))
     app.use(loggerMiddleware)
     app.use(compression())
+    app.use(express.json({ limit: '100kb' }))
 
     const idResolver = new IdResolver({
       plcUrl: config.didPlcUrl,
@@ -93,6 +95,7 @@ export class SokaaAppView {
     server = API(server, ctx)
 
     app.use(health(ctx))
+    app.use('/_sokaa/video', createVideoRouter({ ctx, db }))
     app.use(server.xrpc.router)
     app.use(error.handler)
 
