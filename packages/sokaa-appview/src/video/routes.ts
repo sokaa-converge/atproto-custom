@@ -24,9 +24,12 @@ export type VideoRouteDeps = {
  * - POST /_sokaa/video/webhooks/stream — webhook secret (not admin basic);
  *   Stream (or a proxy) notifies readiness
  */
-export function createVideoRouter(deps: VideoRouteDeps): Router {
+export function createVideoRouter(
+  deps: VideoRouteDeps & { service?: VideoJobService | null },
+): Router {
   const router = Router()
-  const service = createJobService(deps)
+  const service =
+    deps.service !== undefined ? deps.service : createJobService(deps)
 
   router.post('/jobs', requireAdmin(deps), async (req, res) => {
     if (!service) {

@@ -26,6 +26,25 @@ Required env (never commit):
 - `SOKAA_STREAM_CUSTOMER_SUBDOMAIN` (e.g. `https://customer-xxx.cloudflarestream.com`)
 - `SOKAA_STREAM_WEBHOOK_SECRET`
 
+### Customer subdomain (no videos yet)
+
+Your account has a stable `customer-<CODE>.cloudflarestream.com` host. Easiest
+ways to learn it:
+
+1. Open [Stream → Videos](https://dash.cloudflare.com/?to=/:account/stream/videos)
+   — the dashboard shows your unique customer code (also referenced in CSP docs).
+2. Or upload any tiny MP4 once, open the video, copy the HLS Manifest URL, and
+   keep the `https://customer-….cloudflarestream.com` prefix.
+
+### Webhook secret
+
+`SOKAA_STREAM_WEBHOOK_SECRET` is **our** shared secret for
+`POST /_sokaa/video/webhooks/stream` (Bearer or `X-Sokaa-Webhook-Secret`).
+Generate it yourself, e.g. `openssl rand -hex 32`. Cloudflare Stream’s native
+webhook uses a different signing scheme; until a proxy verifies Stream’s
+signature and forwards with this secret, prefer admin job re-submit / smoke
+polling for readiness.
+
 ## Cost / policy
 
 See `sokaa` ADR `docs/decisions/video-processing.md`:
