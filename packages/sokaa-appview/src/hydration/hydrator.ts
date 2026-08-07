@@ -2,6 +2,7 @@ import { dedupeStrs } from '@atproto/common'
 import { DataPlaneClient } from '../data-plane/client'
 import { Database } from '../data-plane/server/db'
 import { ids } from '../data-plane/server/indexing/collections'
+import { videoAssetKey } from '../views/video-embed'
 import { Actor, Actors, ProfileViewerState, ProfileViewerStates } from './actor'
 import {
   FeedItem,
@@ -18,7 +19,6 @@ import {
   VideoAssets,
   mergeStates,
 } from './util'
-import { videoAssetKey } from '../views/video-embed'
 
 export type { HydrateCtx, HydrationState } from './util'
 export { mergeStates } from './util'

@@ -8,20 +8,23 @@ Cloudflare Stream job contract for Sokaa video embeds.
 - Readiness gate before `ready` (playlist HEAD/GET + first segment when possible)
 - Retryable vs permanent failure categories
 - Stream delete for moderation/account takedown (< 1 hour SLA)
+- Same-origin `/v1/media` source URL allowlist for Stream copy
 
 ## AppView integration
 
-Sokaa AppView stores rows in `video_asset` and exposes admin routes:
+Sokaa AppView stores rows in `video_asset` and exposes:
 
-- `POST /_sokaa/video/jobs`
-- `POST /_sokaa/video/webhooks/stream`
-- `DELETE /_sokaa/video/jobs/:did/:cid`
+- `POST /_sokaa/video/jobs` — admin Basic auth
+- `DELETE /_sokaa/video/jobs/:did/:cid` — admin Basic auth
+- `POST /_sokaa/video/webhooks/stream` — `SOKAA_STREAM_WEBHOOK_SECRET`
+  via `Authorization: Bearer …` or `X-Sokaa-Webhook-Secret`
 
 Required env (never commit):
 
 - `SOKAA_STREAM_ACCOUNT_ID`
 - `SOKAA_STREAM_API_TOKEN`
 - `SOKAA_STREAM_CUSTOMER_SUBDOMAIN` (e.g. `https://customer-xxx.cloudflarestream.com`)
+- `SOKAA_STREAM_WEBHOOK_SECRET`
 
 ## Cost / policy
 

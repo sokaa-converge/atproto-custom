@@ -1,14 +1,21 @@
 import {
-  MAX_ATTEMPTS,
-  classifyStreamError,
-  isRetryableFailure,
   type AssetStore,
+  MAX_ATTEMPTS,
   type ReadinessChecker,
   type StreamClient,
   type SubmitJobInput,
   type VideoAssetRecord,
   type VideoFailureCategory,
+  classifyStreamError,
+  isRetryableFailure,
 } from './types'
+
+export class StreamUidMismatchError extends Error {
+  constructor(message = 'stream uid does not match stored job') {
+    super(message)
+    this.name = 'StreamUidMismatchError'
+  }
+}
 
 export class VideoJobService {
   constructor(
@@ -88,6 +95,9 @@ export class VideoJobService {
   ): Promise<VideoAssetRecord | undefined> {
     const existing = await this.store.get(did, videoCid)
     if (!existing) return
+    if (existing.streamUid && existing.streamUid !== streamUid) {
+      throw new StreamUidMismatchError()
+    }
     const playlistUrl = this.stream.getPlaybackUrl(streamUid)
     return this.tryMarkReady(
       { ...existing, streamUid, state: 'processing' },

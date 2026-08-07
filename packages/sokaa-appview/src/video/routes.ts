@@ -1,8 +1,11 @@
-import { Router } from 'express'
+import { timingSafeEqual } from 'node:crypto'
+import { type NextFunction, type Request, type Response, Router } from 'express'
 import {
   CloudflareStreamClient,
   HttpReadinessChecker,
+  StreamUidMismatchError,
   VideoJobService,
+  isAllowedMediaSourceUrl,
   mediaSourceUrl,
 } from '@atproto/video-processing'
 import { AppContext } from '../context'
@@ -15,26 +18,17 @@ export type VideoRouteDeps = {
 }
 
 /**
- * Internal video processing routes (admin basic-auth).
- * - POST /_sokaa/video/jobs — submit/copy to Cloudflare Stream
- * - POST /_sokaa/video/webhooks/stream — Stream ready webhook
- * - DELETE /_sokaa/video/jobs/:did/:cid — takedown (<1h SLA path)
+ * Internal video processing routes.
+ * - POST /_sokaa/video/jobs — admin basic-auth; submit/copy to Cloudflare Stream
+ * - DELETE /_sokaa/video/jobs/:did/:cid — admin basic-auth; takedown
+ * - POST /_sokaa/video/webhooks/stream — webhook secret (not admin basic);
+ *   Stream (or a proxy) notifies readiness
  */
 export function createVideoRouter(deps: VideoRouteDeps): Router {
   const router = Router()
   const service = createJobService(deps)
 
-  router.use((req, res, next) => {
-    const creds = deps.ctx.authVerifier.parseRoleCreds(req)
-    if (!creds.admin) {
-      res.set('WWW-Authenticate', 'Basic realm="sokaa-video"')
-      res.status(401).send('Unauthorized\n')
-      return
-    }
-    next()
-  })
-
-  router.post('/jobs', async (req, res) => {
+  router.post('/jobs', requireAdmin(deps), async (req, res) => {
     if (!service) {
       res.status(503).send('Stream credentials not configured\n')
       return
@@ -49,11 +43,15 @@ export function createVideoRouter(deps: VideoRouteDeps): Router {
       typeof req.body?.sourceUrl === 'string' && req.body.sourceUrl
         ? req.body.sourceUrl
         : mediaSourceUrl(deps.ctx.cfg.cdnUrl, did, videoCid)
+    if (!isAllowedMediaSourceUrl(sourceUrl, deps.ctx.cfg.cdnUrl)) {
+      res.status(400).send('sourceUrl must be a media-gateway /v1/media URL\n')
+      return
+    }
     const record = await service.submit({ did, videoCid, sourceUrl })
     res.status(200).json(record)
   })
 
-  router.post('/webhooks/stream', async (req, res) => {
+  router.post('/webhooks/stream', requireWebhookSecret(), async (req, res) => {
     if (!service) {
       res.status(503).send('Stream credentials not configured\n')
       return
@@ -67,11 +65,27 @@ export function createVideoRouter(deps: VideoRouteDeps): Router {
       res.status(400).send('did, videoCid, and stream uid required\n')
       return
     }
-    const record = await service.markReadyFromWebhook(did, videoCid, streamUid)
-    res.status(200).json(record ?? { ok: false })
+    try {
+      const record = await service.markReadyFromWebhook(
+        did,
+        videoCid,
+        streamUid,
+      )
+      if (!record) {
+        res.status(404).json({ ok: false })
+        return
+      }
+      res.status(200).json(record)
+    } catch (err) {
+      if (err instanceof StreamUidMismatchError) {
+        res.status(409).send('stream uid mismatch\n')
+        return
+      }
+      throw err
+    }
   })
 
-  router.delete('/jobs/:did/:cid', async (req, res) => {
+  router.delete('/jobs/:did/:cid', requireAdmin(deps), async (req, res) => {
     if (!service) {
       res.status(503).send('Stream credentials not configured\n')
       return
@@ -83,6 +97,59 @@ export function createVideoRouter(deps: VideoRouteDeps): Router {
   })
 
   return router
+}
+
+function requireAdmin(deps: VideoRouteDeps) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const creds = deps.ctx.authVerifier.parseRoleCreds(req)
+    if (!creds.admin) {
+      res.set('WWW-Authenticate', 'Basic realm="sokaa-video"')
+      res.status(401).send('Unauthorized\n')
+      return
+    }
+    next()
+  }
+}
+
+function requireWebhookSecret() {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const expected = process.env.SOKAA_STREAM_WEBHOOK_SECRET?.trim()
+    if (!expected) {
+      res.status(503).send('Webhook secret not configured\n')
+      return
+    }
+    const provided =
+      bearerToken(req.headers.authorization) ??
+      headerString(req.headers['x-sokaa-webhook-secret'])
+    if (!provided || !timingSafeSecretEqual(provided, expected)) {
+      res.status(401).send('Unauthorized\n')
+      return
+    }
+    next()
+  }
+}
+
+function timingSafeSecretEqual(a: string, b: string): boolean {
+  const left = Buffer.from(a)
+  const right = Buffer.from(b)
+  if (left.length !== right.length) return false
+  return timingSafeEqual(left, right)
+}
+
+function bearerToken(authorization: string | undefined): string | undefined {
+  if (!authorization) return
+  const match = /^Bearer\s+(.+)$/i.exec(authorization.trim())
+  return match?.[1]?.trim() || undefined
+}
+
+function headerString(
+  value: string | string[] | undefined,
+): string | undefined {
+  if (typeof value === 'string') return value.trim() || undefined
+  if (Array.isArray(value) && typeof value[0] === 'string') {
+    return value[0].trim() || undefined
+  }
+  return
 }
 
 function createJobService(deps: VideoRouteDeps): VideoJobService | null {

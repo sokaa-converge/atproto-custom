@@ -1,11 +1,15 @@
 import { describe, expect, it, vi } from 'vitest'
-import { VideoJobService } from './job-service'
+import { isAllowedMediaSourceUrl, mediaSourceUrl } from './index'
+import { StreamUidMismatchError, VideoJobService } from './job-service'
 import type {
   AssetStore,
   ReadinessChecker,
   StreamClient,
   VideoAssetRecord,
 } from './types'
+
+const did = 'did:plc:alice'
+const videoCid = 'bafkreibm6jg3ux5qux2m7g5w4hfuaf2mp4xg6t4n2v5x6iiys5ndq4nohq'
 
 class MemoryStore implements AssetStore {
   private rows = new Map<string, VideoAssetRecord>()
@@ -38,9 +42,6 @@ function streamClient(
 }
 
 describe('VideoJobService', () => {
-  const did = 'did:plc:alice'
-  const videoCid = 'bafkreibm6jg3ux5qux2m7g5w4hfuaf2mp4xg6t4n2v5x6iiys5ndq4nohq'
-
   it('submits idempotently for the same did+cid', async () => {
     const store = new MemoryStore()
     const stream = streamClient()
@@ -139,5 +140,40 @@ describe('VideoJobService', () => {
     expect(deleted?.state).toBe('failed')
     expect(deleted?.error).toBe('ModerationBlocked')
     expect(deleted?.playlistUrl).toBeUndefined()
+  })
+
+  it('rejects webhook stream uids that do not match the stored job', async () => {
+    const store = new MemoryStore()
+    const stream = streamClient()
+    const service = new VideoJobService(store, stream, {
+      isReady: async () => true,
+    })
+    await service.submit({
+      did,
+      videoCid,
+      sourceUrl: 'https://cdn.example/v1/media/a/b',
+    })
+    await expect(
+      service.markReadyFromWebhook(did, videoCid, 'other-uid'),
+    ).rejects.toBeInstanceOf(StreamUidMismatchError)
+  })
+})
+
+describe('isAllowedMediaSourceUrl', () => {
+  const cdn = 'https://media.example'
+
+  it('allows same-origin /v1/media/:did/:cid URLs', () => {
+    const url = mediaSourceUrl(cdn, did, videoCid)
+    expect(isAllowedMediaSourceUrl(url, cdn)).toBe(true)
+  })
+
+  it('rejects off-origin and non-media paths', () => {
+    expect(
+      isAllowedMediaSourceUrl('https://evil.example/v1/media/a/b', cdn),
+    ).toBe(false)
+    expect(isAllowedMediaSourceUrl(`${cdn}/v1/hls/a/b/master.m3u8`, cdn)).toBe(
+      false,
+    )
+    expect(isAllowedMediaSourceUrl(`${cdn}/v1/media/only-one`, cdn)).toBe(false)
   })
 })
