@@ -2,6 +2,17 @@ import { describe, expect, it, vi } from 'vitest'
 import { CloudflareStreamClient } from './cloudflare-stream'
 
 describe('CloudflareStreamClient', () => {
+  it('normalizes bare customer codes to the Stream host', async () => {
+    const client = new CloudflareStreamClient({
+      accountId: 'acct',
+      apiToken: 'token',
+      customerSubdomain: 'txmmldn42ev278pb',
+    })
+    expect(client.getPlaybackUrl('abc123')).toBe(
+      'https://customer-txmmldn42ev278pb.cloudflarestream.com/abc123/manifest/video.m3u8',
+    )
+  })
+
   it('copies from URL and builds playback URL from customer subdomain', async () => {
     const fetchImpl = vi.fn(async () =>
       Response.json({
