@@ -56,8 +56,9 @@ export class BlobTransactor extends BlobReader {
     userSuggestedMime: string,
     blobStream: stream.Readable,
   ): Promise<BlobMetadata> {
-    const [tempKey, size, sha256, sniffedMime] = await Promise.all([
-      this.blobstore.putTemp(cloneStream(blobStream)),
+    // Resolve mime before putTemp so S3/R2 can persist Content-Type on the
+    // object (media gateway + browsers need a real image/* MIME).
+    const [size, sha256, sniffedMime] = await Promise.all([
       streamSize(cloneStream(blobStream)),
       sha256Stream(cloneStream(blobStream)),
       mimeTypeFromStream(cloneStream(blobStream)),
@@ -65,6 +66,9 @@ export class BlobTransactor extends BlobReader {
 
     const cid = sha256RawToCid(sha256)
     const mimeType = sniffedMime || userSuggestedMime
+    const tempKey = await this.blobstore.putTemp(cloneStream(blobStream), {
+      contentType: mimeType,
+    })
 
     return {
       tempKey,

@@ -1,3 +1,4 @@
+import { Readable } from 'node:stream'
 import { describe, expect, it } from 'vitest'
 import {
   resolveUploadContentType,
@@ -45,13 +46,8 @@ describe('resolveUploadContentType', () => {
   })
 
   it('keeps octet-stream for streams when sniffing is unavailable', () => {
-    const readable = {
-      read() {
-        return null
-      },
-    } as NodeJS.ReadableStream
-    expect(resolveUploadContentType(readable, 'application/octet-stream')).toBe(
-      'application/octet-stream',
-    )
+    expect(
+      resolveUploadContentType(Readable.from([]), 'application/octet-stream'),
+    ).toBe('application/octet-stream')
   })
 })
