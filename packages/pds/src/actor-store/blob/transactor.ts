@@ -9,6 +9,7 @@ import {
   cloneStream,
   sha256RawToCid,
   streamSize,
+  streamToBytes,
 } from '@atproto/common'
 import { BlobRef } from '@atproto/lexicon'
 import { BlobNotFoundError, BlobStore, WriteOpAction } from '@atproto/repo'
@@ -56,17 +57,19 @@ export class BlobTransactor extends BlobReader {
     userSuggestedMime: string,
     blobStream: stream.Readable,
   ): Promise<BlobMetadata> {
-    // Resolve mime before putTemp so S3/R2 can persist Content-Type on the
-    // object (media gateway + browsers need a real image/* MIME).
-    const [size, sha256, sniffedMime] = await Promise.all([
+    // cloneStream only pipes a live source: every consumer must attach in the
+    // same synchronous Promise.all setup. Buffer bytes here so putTemp can run
+    // after mime sniffing with a real Content-Type for S3/R2.
+    const [size, sha256, sniffedMime, bytes] = await Promise.all([
       streamSize(cloneStream(blobStream)),
       sha256Stream(cloneStream(blobStream)),
       mimeTypeFromStream(cloneStream(blobStream)),
+      streamToBytes(cloneStream(blobStream)),
     ])
 
     const cid = sha256RawToCid(sha256)
     const mimeType = sniffedMime || userSuggestedMime
-    const tempKey = await this.blobstore.putTemp(cloneStream(blobStream), {
+    const tempKey = await this.blobstore.putTemp(bytes, {
       contentType: mimeType,
     })
 
