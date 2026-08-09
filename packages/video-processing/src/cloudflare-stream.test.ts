@@ -3,13 +3,21 @@ import { CloudflareStreamClient } from './cloudflare-stream'
 
 describe('CloudflareStreamClient', () => {
   it('normalizes bare customer codes to the Stream host', async () => {
-    const client = new CloudflareStreamClient({
+    const bare = new CloudflareStreamClient({
       accountId: 'acct',
       apiToken: 'token',
       customerSubdomain: 'txmmldn42ev278pb',
     })
-    expect(client.getPlaybackUrl('abc123')).toBe(
+    expect(bare.getPlaybackUrl('abc123')).toBe(
       'https://customer-txmmldn42ev278pb.cloudflarestream.com/abc123/manifest/video.m3u8',
+    )
+    const prefixed = new CloudflareStreamClient({
+      accountId: 'acct',
+      apiToken: 'token',
+      customerSubdomain: 'customer-xyz',
+    })
+    expect(prefixed.getPlaybackUrl('abc123')).toBe(
+      'https://customer-xyz.cloudflarestream.com/abc123/manifest/video.m3u8',
     )
   })
 
