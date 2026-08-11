@@ -1,5 +1,5 @@
-import { sql } from 'kysely'
 import { ServiceImpl } from '@connectrpc/connect'
+import { sql } from 'kysely'
 import { Service } from '../../../proto/sokaa_connect'
 import { Database } from '../db'
 import { IndexedAtDidKeyset, paginate } from '../db/pagination'
