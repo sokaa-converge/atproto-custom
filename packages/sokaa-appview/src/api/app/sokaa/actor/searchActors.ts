@@ -23,8 +23,11 @@ export default function (server: Server, ctx: AppContext) {
   server.app.sokaa.actor.searchActors({
     auth: ctx.authVerifier.optionalStandardOrRole,
     handler: async ({ params, auth }) => {
-      const viewer = auth.credentials.iss ?? null
-      const hydrateCtx = ctx.hydrator.createContext({ viewer })
+      const { viewer, includeTakedowns } = ctx.authVerifier.parseCreds(auth)
+      const hydrateCtx = ctx.hydrator.createContext({
+        viewer,
+        includeTakedowns,
+      })
 
       const result = await searchActors({ ...params, hydrateCtx }, ctx)
 
